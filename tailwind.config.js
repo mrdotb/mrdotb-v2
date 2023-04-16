@@ -2,7 +2,10 @@
 module.exports = {
   content: ['./src/**/*.{js,jsx}'],
   darkMode: 'class',
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/aspect-ratio')
+  ],
   theme: {
     extend: {
       colors: {
@@ -16,9 +19,7 @@ module.exports = {
           '700': '#997630'
         }
       },
-      animation: {
-        'spin-slow': 'spin 5s linear infinite'
-      }
+      animation: {}
     },
     fontSize: {
       xs: ['0.8125rem', { lineHeight: '1.5rem' }],

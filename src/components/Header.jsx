@@ -23,16 +23,6 @@ function CloseIcon(props) {
   )
 }
 
-function HexagonIcon(props) {
-  return (
-    <svg viewBox="0 0 1.799 1.8" {...props}>
-      <g fill="none" stroke="#c29948">
-        <path strokeWidth=".040" d="m1.535.293.243.627-.271.615-.627.243-.616-.271L.021.88.293.265.92.02z"/>
-      </g>
-    </svg>
-  )
-}
-
 function ChevronDownIcon(props) {
   return (
     <svg viewBox="0 0 8 6" aria-hidden="true" {...props}>
@@ -217,15 +207,6 @@ function clamp(number, a, b) {
   let min = Math.min(a, b)
   let max = Math.max(a, b)
   return Math.min(Math.max(number, min), max)
-}
-
-function AvatarHexagon() {
-  return (
-    <div className="bg-white/90 dark:bg-zinc-800/90 rounded-full relative w-12 h-12 flex justify-center items-center">
-      <HexagonIcon className="animate-spin-slow absolute inset-0 w-12 h-12" />
-      <Avatar />
-    </div>
-  )
 }
 
 function AvatarContainer({ className, ...props }) {
@@ -418,7 +399,9 @@ export function Header() {
             <div className="relative flex gap-4">
               <div className="flex flex-1">
                 {!isHomePage && (
-                  <AvatarHexagon />
+                  <AvatarContainer>
+                    <Avatar />
+                  </AvatarContainer>
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">
