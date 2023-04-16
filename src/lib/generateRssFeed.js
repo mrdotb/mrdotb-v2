@@ -3,7 +3,7 @@ import { Feed } from 'feed'
 import { mkdir, writeFile } from 'fs/promises'
 import { withRouter } from 'next/router'
 
-import { getAllPosts } from './getAllPosts'
+import { getAllPosts } from './posts'
 
 export async function generateRssFeed() {
   let posts = await getAllPosts()

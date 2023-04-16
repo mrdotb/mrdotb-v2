@@ -23,6 +23,16 @@ function CloseIcon(props) {
   )
 }
 
+function HexagonIcon(props) {
+  return (
+    <svg viewBox="0 0 1.799 1.8" {...props}>
+      <g fill="none" stroke="#c29948">
+        <path strokeWidth=".040" d="m1.535.293.243.627-.271.615-.627.243-.616-.271L.021.88.293.265.92.02z"/>
+      </g>
+    </svg>
+  )
+}
+
 function ChevronDownIcon(props) {
   return (
     <svg viewBox="0 0 8 6" aria-hidden="true" {...props}>
@@ -209,6 +219,15 @@ function clamp(number, a, b) {
   return Math.min(Math.max(number, min), max)
 }
 
+function AvatarHexagon() {
+  return (
+    <div className="bg-white/90 dark:bg-zinc-800/90 rounded-full relative w-12 h-12 flex justify-center items-center">
+      <HexagonIcon className="animate-spin-slow absolute inset-0 w-12 h-12" />
+      <Avatar />
+    </div>
+  )
+}
+
 function AvatarContainer({ className, ...props }) {
   return (
     <div
@@ -231,7 +250,7 @@ function Avatar({ large = false, className, ...props }) {
     >
       <Image
         src={avatarImage}
-        alt=""
+        alt="Profil picture of Baptiste Chaleil"
         sizes={large ? '4rem' : '2.25rem'}
         className={clsx(
           'rounded-full bg-zinc-100 object-cover dark:bg-zinc-800',
@@ -370,7 +389,7 @@ export function Header() {
                 style={{ position: 'var(--header-inner-position)' }}
               >
                 <div className="relative">
-                  <AvatarContainer
+                 <AvatarContainer
                     className="absolute left-0 top-3 origin-left transition-opacity"
                     style={{
                       opacity: 'var(--avatar-border-opacity, 0)',
@@ -399,9 +418,7 @@ export function Header() {
             <div className="relative flex gap-4">
               <div className="flex flex-1">
                 {!isHomePage && (
-                  <AvatarContainer>
-                    <Avatar />
-                  </AvatarContainer>
+                  <AvatarHexagon />
                 )}
               </div>
               <div className="flex flex-1 justify-end md:justify-center">

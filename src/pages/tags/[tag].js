@@ -1,9 +1,10 @@
 import Head from 'next/head'
+import { useRouter } from 'next/router'
 
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { formatDate } from '@/lib/formatDate'
-import { getAllPosts } from '@/lib/posts'
+import { getPostsByTag, getUniqueTags } from '@/lib/posts'
 
 function Post({ post }) {
   return (
@@ -34,20 +35,19 @@ function Post({ post }) {
   )
 }
 
-export default function PostsIndex({ posts }) {
+export default function Tag({posts}) {
+  const router = useRouter()
+  const tag = router.query.tag
   return (
     <>
       <Head>
-        <title>Posts - Baptiste Chaleil</title>
+        <title>{`Posts tagged ${tag} - Baptiste Chaleil`}</title>
         <meta
           name="description"
-          content="My notes and posts about various topics on software development"
+          content={`My notes and posts about various topics on software development tagged ${tag}`}
         />
       </Head>
-      <SimpleLayout
-        title="My notes and posts about various topics on software development"
-        intro="Here, I share my knowledge, encompassing everything from succinct post to extensive series, organized chronologically."
-      >
+      <SimpleLayout title={`#${tag}`}>
         <div className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
           <div className="flex max-w-3xl flex-col space-y-16">
             {posts.map((post) => (
@@ -60,10 +60,22 @@ export default function PostsIndex({ posts }) {
   )
 }
 
-export async function getStaticProps() {
+export async function getStaticPaths() {
+  const uniqueTags = await getUniqueTags()
+  const paths = uniqueTags.map(tag => ({
+    params: {tag: tag}
+  }))
+  return {
+    paths: paths,
+    fallback: false
+  }
+}
+
+export async function getStaticProps(context) {
+  const posts = await getPostsByTag(context.params.tag)
   return {
     props: {
-      posts: (await getAllPosts()).map(({ component, ...meta }) => meta),
+      posts: posts.map(({ component, ...meta }) => meta),
     },
   }
 }

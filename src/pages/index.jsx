@@ -16,7 +16,7 @@ import logoPablo from '@/images/logos/pablo.svg'
 import logoPandascore from '@/images/logos/pandascore.png'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
-import { getAllPosts } from '@/lib/getAllPosts'
+import { getAllPosts } from '@/lib/posts'
 
 function BriefcaseIcon(props) {
   return (

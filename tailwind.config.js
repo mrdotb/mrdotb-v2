@@ -15,6 +15,9 @@ module.exports = {
           '600': '#ac8436',
           '700': '#997630'
         }
+      },
+      animation: {
+        'spin-slow': 'spin 5s linear infinite'
       }
     },
     fontSize: {
@@ -103,12 +106,12 @@ module.exports = {
           color: 'var(--tw-prose-body)',
           lineHeight: theme('lineHeight.7'),
           '> *': {
-            marginTop: theme('spacing.10'),
-            marginBottom: theme('spacing.10'),
+            marginTop: theme('spacing.5'),
+            marginBottom: theme('spacing.5'),
           },
           p: {
-            marginTop: theme('spacing.7'),
-            marginBottom: theme('spacing.7'),
+            marginTop: theme('spacing.5'),
+            marginBottom: theme('spacing.5'),
           },
 
           // Headings
@@ -119,13 +122,13 @@ module.exports = {
           h2: {
             fontSize: theme('fontSize.xl')[0],
             lineHeight: theme('lineHeight.7'),
-            marginTop: theme('spacing.20'),
+            marginTop: theme('spacing.10'),
             marginBottom: theme('spacing.4'),
           },
           h3: {
             fontSize: theme('fontSize.base')[0],
             lineHeight: theme('lineHeight.7'),
-            marginTop: theme('spacing.16'),
+            marginTop: theme('spacing.8'),
             marginBottom: theme('spacing.4'),
           },
           ':is(h2, h3) + *': {
@@ -202,8 +205,8 @@ module.exports = {
             paddingLeft: theme('spacing.6'),
           },
           li: {
-            marginTop: theme('spacing.6'),
-            marginBottom: theme('spacing.6'),
+            marginTop: theme('spacing.1'),
+            marginBottom: theme('spacing.1'),
             paddingLeft: theme('spacing[3.5]'),
           },
           'li::marker': {
@@ -221,8 +224,8 @@ module.exports = {
             marginBottom: theme('spacing.4'),
           },
           'li :is(li, p)': {
-            marginTop: theme('spacing.3'),
-            marginBottom: theme('spacing.3'),
+            marginTop: theme('spacing.0'),
+            marginBottom: theme('spacing.0'),
           },
 
           // Code blocks

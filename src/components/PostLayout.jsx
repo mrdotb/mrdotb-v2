@@ -1,10 +1,14 @@
 import Head from 'next/head'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { MDXProvider } from '@mdx-js/react'
 
 import { Container } from '@/components/Container'
 import { Prose } from '@/components/Prose'
 import { Newsletter } from '@/components/Newsletter'
 import { formatDate } from '@/lib/formatDate'
+import { Pre } from '@/components/Pre'
 
 function ArrowLeftIcon(props) {
   return (
@@ -34,7 +38,7 @@ export function PostLayout({
   return (
     <>
       <Head>
-        <title>{`${meta.title} - Spencer Sharp`}</title>
+        <title>{`${meta.title} - Baptiste Chaleil`}</title>
         <meta name="description" content={meta.description} />
       </Head>
       <Container className="mt-16 lg:mt-32">
@@ -55,6 +59,15 @@ export function PostLayout({
                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                   {meta.title}
                 </h1>
+                <ul className="mt-4 flex text-zinc-400 dark:text-zinc-500 gap-2">
+                  {meta.tags.map(tag => (
+                    <li key={tag}>
+                      <Link href={`/tags/${tag}`}>
+                        {`#${tag}`}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
                 <time
                   dateTime={meta.date}
                   className="order-first flex items-center text-base text-zinc-400 dark:text-zinc-500"
@@ -62,14 +75,17 @@ export function PostLayout({
                   <span className="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" />
                   <span className="ml-3">{formatDate(meta.date)}</span>
                 </time>
+                {meta.cover && <Image priority={true} className="my-4 rounded-3xl" src={meta.cover} alt={`cover for article ${meta.title}`} />}
               </header>
-              <Prose className="mt-8">{children}</Prose>
+                <MDXProvider components={{pre: Pre }}>
+                  <Prose className="mt-8">{children}</Prose>
+                </MDXProvider>
             </article>
           </div>
         </div>
       </Container>
-      <Container className="mt-6">
-        <div className="mx-auto max-w-2xl">
+      <Container className="mt-12">
+        <div className="mx-auto max-w-xl">
           <Newsletter />
         </div>
       </Container>
