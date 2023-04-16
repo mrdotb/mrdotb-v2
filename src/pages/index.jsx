@@ -147,7 +147,7 @@ function Resume() {
       </ol>
       <Button href="https://www.linkedin.com/in/baptiste-chaleil-9494a775/" className="group mt-6 w-full">
         Download CV
-        <ArrowDownIcon className="h-4 w-4 stroke-zinc-400 transition group-active:stroke-zinc-600 dark:group-hover:stroke-zinc-50 dark:group-active:stroke-zinc-50" />
+        <ArrowDownIcon className="h-4 w-4 stroke-white" />
       </Button>
     </div>
   )
