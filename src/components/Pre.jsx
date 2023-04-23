@@ -1,6 +1,19 @@
 import { useState, useRef } from 'react'
 
-export function Pre(props) {
+export function Pre({collapsed, ...props}) {
+  let collapsable;
+  if (typeof collapsed === "undefined") {
+    collapsable = false
+  } else {
+    collapsable = true
+  }
+
+  const [isCollapsed, setCollapse] = useState(collapsable ? Boolean(collapsed) : null)
+
+  const toggleCollapse = () => {
+    setCollapse(!isCollapsed)
+  }
+
   const textInput = useRef(null)
   const [hovered, setHovered] = useState(false)
   const [copied, setCopied] = useState(false)
@@ -22,6 +35,7 @@ export function Pre(props) {
 
   return (
     <div ref={textInput} onMouseEnter={onEnter} onMouseLeave={onExit} className="relative">
+
       {hovered && (
         <button
           aria-label="Copy code"
@@ -63,7 +77,22 @@ export function Pre(props) {
         </button>
       )}
 
-      <pre>{props.children}</pre>
+      <pre>
+        <div className={(collapsable && isCollapsed) ? "hidden" : undefined}>
+          {props.children}
+        </div>
+        {collapsable && (
+          <div className="flex justify-center">
+            <button
+              aria-label="Collapse / Expand code"
+              type="button"
+              className="rounded py-1 text-xs bg-gold-400 font-semibold text-white px-2"
+              onClick={toggleCollapse}>
+              {isCollapsed ? "Expand code" : "Collapse code"}
+            </button>
+          </div>
+        )}
+      </pre>
     </div>
   )
 }

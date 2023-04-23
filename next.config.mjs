@@ -3,6 +3,8 @@ import remarkGfm from 'remark-gfm'
 import rehypePrismPlus from 'rehype-prism-plus'
 import remarkToc from "remark-toc"
 import rehypeSlug from "rehype-slug"
+import rehypeMetaAttribute from './src/lib/rehypeMetaAttribute.mjs'
+
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -17,7 +19,7 @@ const withMDX = nextMDX({
   extension: /\.mdx?$/,
   options: {
     remarkPlugins: [remarkGfm, remarkToc],
-    rehypePlugins: [rehypePrismPlus, rehypeSlug],
+    rehypePlugins: [rehypePrismPlus, rehypeSlug, rehypeMetaAttribute],
     providerImportSource: '@mdx-js/react'
   },
 })

@@ -46,7 +46,7 @@ export default function PostsIndex({ posts }) {
       </Head>
       <SimpleLayout
         title="My notes and posts about various topics on software development"
-        intro="Here, I share my knowledge, encompassing everything from succinct post to extensive series, organized chronologically."
+        intro="Here, I share my knowledge about the world of elixir and other topics. From succinct post to extensive series, organized chronologically."
       >
         <div className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
           <div className="flex max-w-3xl flex-col space-y-16">
