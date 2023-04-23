@@ -3,19 +3,19 @@ import { Feed } from 'feed'
 import { mkdir, writeFile } from 'fs/promises'
 import { withRouter } from 'next/router'
 
-import { getAllPosts } from './posts'
+import { getData } from './data'
 
 export async function generateRssFeed() {
-  let posts = await getAllPosts()
+  let datas = await getData()
   let siteUrl = process.env.NEXT_PUBLIC_SITE_URL
   let author = {
-    name: 'Spencer Sharp',
-    email: 'spencer@planetaria.tech',
+    name: 'Baptiste Chaleil',
+    email: 'mrdotb@protonmail.com',
   }
 
   let feed = new Feed({
     title: author.name,
-    description: 'Your blog description',
+    description: 'I share my knowledge about the world of elixir and other topics. From succinct post to extensive series, organized chronologically.',
     author,
     id: siteUrl,
     link: siteUrl,
@@ -28,21 +28,26 @@ export async function generateRssFeed() {
     },
   })
 
-  for (let post of posts) {
-    let url = `${siteUrl}/posts/${post.slug}`
+  for (let data of datas) {
+    let url
+    if (data.type === 'til') {
+      url = `${siteUrl}/tils/${data.slug}`
+    } else {
+      url = `${siteUrl}/posts/${data.slug}`
+    }
     let html = ReactDOMServer.renderToStaticMarkup(
-      withRouter(<post.component isRssFeed />)
+      withRouter(<data.component isRssFeed />)
     )
 
     feed.addItem({
-      title: post.title,
+      title: data.title,
       id: url,
       link: url,
-      description: post.description,
+      description: data.description,
       content: html,
       author: [author],
       contributor: [author],
-      date: new Date(post.date),
+      date: new Date(data.date),
     })
   }
 

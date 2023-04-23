@@ -1,0 +1,33 @@
+import { PostLayout } from '@/components/PostLayout'
+import { YouTube } from '@/components/YouTube'
+import { SingleLightbox } from '@/components/SingleLightbox'
+import Image from 'next/image'
+
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2022-09-06',
+  title: 'Measure Elixir Code Time Execution',
+  tags: ['til', 'elixir'],
+  description:
+    'Measure elixir code time execution'
+}
+
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+
+
+If we want to measure the execution time of some elixir code.
+We can use :timer.tc
+
+```elixir
+{time, _result} =
+  :timer.tc(fn ->
+    fun()
+  end)
+
+IO.puts("exec time in microsecond: #{time}")
+```
+
+

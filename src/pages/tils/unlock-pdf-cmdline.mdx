@@ -1,0 +1,32 @@
+import { PostLayout } from '@/components/PostLayout'
+import { YouTube } from '@/components/YouTube'
+import { SingleLightbox } from '@/components/SingleLightbox'
+import Image from 'next/image'
+
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2022-06-03',
+  title: 'Unlock Pdf with cmd line',
+  tags: ['til', 'pdf', 'shell'],
+  description:
+    'Unlock pdf using cmd line tool'
+}
+
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+
+
+## Unlock a pdf using cmd line
+
+Sometimes you need to access a pdf which is password protected.
+
+We can use [qpdf](https://github.com/qpdf/qpdf) to remove the password.
+
+```shell
+sudo apt install qpdf
+qpdf --decrypt locked.pdf unlocked.pdf
+```
+
+

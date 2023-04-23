@@ -1,0 +1,23 @@
+import { PostLayout } from '@/components/PostLayout'
+import { YouTube } from '@/components/YouTube'
+import { SingleLightbox } from '@/components/SingleLightbox'
+import Image from 'next/image'
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2020-11-13',
+  title: 'zsh edit last cmd in $EDITOR',
+  tags: ['shell', 'til'],
+  description:
+    'Open last cmd in $EDITOR'
+}
+
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+
+
+
+Sometime when we work on long cmd line like awk script I want to be able to edit
+it in my `$EDITOR`.
+Use `fc` to open the last sended cmd line in your `$EDITOR`.

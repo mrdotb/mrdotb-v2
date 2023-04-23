@@ -4,44 +4,45 @@ import { useRouter } from 'next/router'
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import { formatDate } from '@/lib/formatDate'
-import { getPostsByTag, getUniqueTags } from '@/lib/posts'
+import { getDataByTag, getUniqueTags } from '@/lib/data'
 
-function Post({ post }) {
+function Data({ data }) {
   return (
     <article className="md:grid md:grid-cols-4 md:items-baseline">
       <Card className="md:col-span-3">
-        <Card.Title href={`/posts/${post.slug}`}>
-          {post.title}
+        <Card.Title href={`${data.type === 'til' ? '/tils/' : '/posts/'}${data.slug}`}>
+          {data.title}
         </Card.Title>
         <Card.Eyebrow
           as="time"
-          dateTime={post.date}
+          dateTime={data.date}
           className="md:hidden"
           decorate
         >
-          {formatDate(post.date)}
+          {formatDate(data.date)}
         </Card.Eyebrow>
-        <Card.Description>{post.description}</Card.Description>
-        <Card.Cta>Read post</Card.Cta>
+        <Card.Description>{data.description}</Card.Description>
+        <Card.Cta>Read {data.type}</Card.Cta>
       </Card>
       <Card.Eyebrow
         as="time"
-        dateTime={post.date}
+        dateTime={data.date}
         className="mt-1 hidden md:block"
       >
-        {formatDate(post.date)}
+        {formatDate(data.date)}
       </Card.Eyebrow>
     </article>
   )
 }
 
-export default function Tag({posts}) {
+export default function Tag({datas}) {
   const router = useRouter()
   const tag = router.query.tag
+
   return (
     <>
       <Head>
-        <title>{`Posts tagged ${tag} - Baptiste Chaleil`}</title>
+        <title>{`Posts & Tils tagged ${tag} - Baptiste Chaleil`}</title>
         <meta
           name="description"
           content={`My notes and posts about various topics on software development tagged ${tag}`}
@@ -50,8 +51,8 @@ export default function Tag({posts}) {
       <SimpleLayout title={`#${tag}`}>
         <div className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
           <div className="flex max-w-3xl flex-col space-y-16">
-            {posts.map((post) => (
-              <Post key={post.slug} post={post} />
+            {datas.map((data) => (
+              <Data key={data.slug} data={data} />
             ))}
           </div>
         </div>
@@ -72,10 +73,10 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps(context) {
-  const posts = await getPostsByTag(context.params.tag)
+  const data = await getDataByTag(context.params.tag)
   return {
     props: {
-      posts: posts.map(({ component, ...meta }) => meta),
+      datas: data.map(({ component, ...meta }) => meta),
     },
   }
 }
