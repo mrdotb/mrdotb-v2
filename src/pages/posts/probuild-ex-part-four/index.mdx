@@ -261,7 +261,7 @@ We test our `Search.validate/1` function and `list_pro_participant_summoner/1` u
 
 Now it's time to integrate the search to our liveview.
 
-Edit `lib/probuild_ex_web/live/game_live/index.ex`
+Edit `game_live/index.ex`
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -382,7 +382,7 @@ end
 ```
 
 
-Edit `lib/probuild_ex_web/live/game_live/index.html.heex`
+Edit `game_live/index.html.heex`
 ```html
 <div class="flex flex-col">
 
@@ -777,7 +777,7 @@ The `loadMore` function will trigger when the `#load-more` div and the root over
 
 
 
-Edit `lib/probuild_ex_web/live/game_live/index.html.heex`
+Edit `game_live/index.html.heex`
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -853,7 +853,7 @@ defmodule ProbuildExWeb.GameLive.Index do
 end
 ```
 
-Edit `lib/probuild_ex_web/live/game_live/index.html.heex`
+Edit `game_live/index.html.heex`
 ```html
 <div class="flex flex-col">
 

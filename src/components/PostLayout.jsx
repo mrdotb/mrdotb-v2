@@ -47,7 +47,7 @@ export function PostLayout({
                 <h1 className="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
                   {meta.title}
                 </h1>
-                <ul className="mt-4 flex text-zinc-400 dark:text-zinc-500 gap-2">
+                <ul className="mt-4 flex flex-wrap text-zinc-400 dark:text-zinc-500 gap-2">
                   {meta.tags.map(tag => (
                     <li key={tag}>
                       <Link href={`/tags/${tag}`}>

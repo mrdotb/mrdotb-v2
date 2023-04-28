@@ -487,8 +487,11 @@ end
 
 The `platform_ids` and `regions` Map on the top are used to construct the url depending on the ressource `match`, `summoner` we need to use the `region` or `platform_id` in the request url.
 Ex:
-- `https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/8tjefad_ZLY2X8UbmwYlR1PBtaRgJBxcOcvFZ8tMy6f4bw56fMaIvLoqA87DK3yzqihZs7L-VQCdBw/ids?start=0&count=20`
-- `https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-account/CZV2GRJ_26fBaV87oUY8LYWFVVlXbUjkG5bKHFWXzfZex20`
+
+```
+`https://europe.api.riotgames.com/lol/match/v5/matches/by-puuid/8tjefad_ZLY2X8UbmwYlR1PBtaRgJBxcOcvFZ8tMy6f4bw56fMaIvLoqA87DK3yzqihZs7L-VQCdBw/ids?start=0&count=20`
+`https://eun1.api.riotgames.com/lol/summoner/v4/summoners/by-account/CZV2GRJ_26fBaV87oUY8LYWFVVlXbUjkG5bKHFWXzfZex20`
+```
 
 The HTTP client [tesla](https://hexdocs.pm/tesla/readme.html) come with many usefull middlewares.
 A tesla middleware is an extra step before / after the request to modify it.

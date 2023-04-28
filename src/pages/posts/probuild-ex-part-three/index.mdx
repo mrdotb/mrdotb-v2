@@ -102,7 +102,7 @@ It will edit `assets/css/app.css` and `assets/js/app.js` and create `assets/tail
 
 At this point we should be good to go let's try some tailwind classes.
 
-edit `lib/probuild_ex_web/templates/page/index.html.heex` and replace the content
+edit page/index.html.heex` and replace the content
 ```html
 <h1 class="text-3xl text-red-500 font-bold underline">Welcome to Phoenix!</h1>
 ```
@@ -293,7 +293,7 @@ Create the folder `game_live`
 mkdir -p lib/probuild_ex_web/live/game_live/
 ```
 
-Create `lib/probuild_ex_web/live/game_live/index.ex`
+Create `game_live/index.ex`
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -318,7 +318,7 @@ end
 ```
 We use the query we did earlier and assigns the result to be used in the liveview. We will use the `apply_action` pattern for our liveview.
 
-Create `lib/probuild_ex_web/live/game_live/index.html.heex`
+Create `game_live/index.html.heex`
 ```elixir
 <div class="flex flex-col">
   <div class="flex justify-center">
@@ -524,7 +524,7 @@ let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_t
 
 Now let's use the hook in our liveview template.
 
-Edit `lib/probuild_ex_web/live/game_live/index.html.heex` replace `<%# TODO time ago %>`
+Edit `game_live/index.html.heex` replace `<%# TODO time ago %>`
 ```html
 <time id={"time-ago-#{participant.id}"} phx-hook="TimeAgo" datetime={participant.game.creation}></time>
 ```
@@ -786,7 +786,7 @@ Edit `lib/probuild_ex/application.ex`
 ```
 We add the Cache to the list of children, when the application start requests to ddragon will be done and cached.
 
-Edit `lib/probuild_ex_web/live/game_live/index.ex`
+Edit `game_live/index.ex`
 ```elixir
 ...
 alias ProbuildEx.Ddragon
@@ -794,7 +794,7 @@ alias ProbuildEx.Ddragon
 ```
 We add an alias to `Ddragon` module on top of `GameLive.Index`
 
-Edit `lib/probuild_ex_web/live/game_live/index.html.heex`
+Edit `game_live/index.html.heex`
 ```html
 ...
 <%= img_tag(Ddragon.get_champion_image(participant.game.version, participant.champion_id), class: "w-8 h-8 rounded-full") %>

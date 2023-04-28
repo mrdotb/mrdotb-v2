@@ -70,8 +70,6 @@ I created a new migration.
 mix ecto.gen.migration create_extension_pg_stat_statements
 ```
 
-`migrations/XXXXXXXXXX_create_extension_pg_stat_statements.exs`
-
 ```elixir
 def change do
   execute """
@@ -183,8 +181,6 @@ We can optimize the ORDER BY clause using an index to improve the sorting perfor
 ```elixir
 mix ecto.gen.migration create_games_creation_desc_index 
 ```
-
-`migrations/XXXXXXXXXX_create_games_creation_desc_index.exs`
 
 ```elixir
 def change do
@@ -399,7 +395,7 @@ I don't want to know the `total_count` since it will make a slow count request.
 
 I replaced the `page_number` with the `after_cursor` we will paginate over `game.creation desc`.
 
-In the liveview `lib/probuild_ex_web/live/game_live/index.ex`
+In the liveview `game_live/index.ex`
 
 I replaced the @defaults page with the paginator struct.
 ```elixir
@@ -410,7 +406,7 @@ I replaced the @defaults page with the paginator struct.
   }
 ```
 
-`lib/probuild_ex_web/live/game_live/index.html.heex`
+`game_live/index.html.heex`
 ```elixir
     <div id="infinite-scroll" phx-hook="InfiniteScroll" data-cursor={@page.metadata.after} class="w-full max-w-3xl py-2 flex justify-center">
       <.spinner load?={@load_more?} />
