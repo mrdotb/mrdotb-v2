@@ -1,0 +1,43 @@
+import { PostLayout } from '@/components/PostLayout'
+import { YouTube } from '@/components/YouTube'
+import { SingleLightbox } from '@/components/SingleLightbox'
+import Image from 'next/image'
+
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2023-04-30',
+  title: 'Downloading Large Files with Finch in Elixir',
+  tags: ['elixir', 'finch', 'til'],
+  description:
+    'Learn how to efficiently download large files in Elixir using the Finch HTTP client library. This article provides a code example that demonstrates how to stream and store large zip files on your local system.'
+}
+
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+
+
+In this TIL, we will explore how to download large files using the Finch HTTP client library in Elixir. [Finch](https://github.com/sneako/finch) is a highly efficient, concurrent HTTP client that utilizes the powerful concurrency features provided by Elixir.
+
+The following code demonstrates how to download a large zip file using Finch:
+
+```elixir
+path = "/tmp/big-file.zip"
+file = File.open!(path, [:write, :exclusive])
+url = "https://domain.com/url/big-file.zip"
+request = Finch.build(:get, url)
+
+Finch.stream(request, Lor.Finch, nil, fn
+  {:status, status}, _ ->
+    IO.inspect("Download assets status: #{status}")
+
+  {:headers, headers}, _ ->
+    IO.inspect("Download assets headers: #{inspect(headers)}")
+
+  {:data, data}, _ ->
+    IO.binwrite(file, data)
+end)
+```
+
+This code snippet downloads a large zip file, storing it in the `/tmp` directory. We first build the Finch request using `Finch.build/2`, and then stream the response by calling `Finch.stream/4`. By streaming the response, we can efficiently handle large files without consuming excessive memory. The data chunks are written directly to the file using `IO.binwrite/2` as they are received, making it an ideal approach for downloading large files.
