@@ -9,7 +9,7 @@ import { Prose } from '@/components/Prose'
 import { Newsletter } from '@/components/Newsletter'
 import { formatDate } from '@/lib/formatDate'
 import { Pre } from '@/components/Pre'
-import { ArrowLeftIcon } from '@/components/Icon'
+import { ArrowLeftIcon } from '@/components/Icons'
 
 export function PostLayout({
   children,
