@@ -24,7 +24,7 @@ file = File.open!(path, [:write, :exclusive])
 url = "https://domain.com/url/big-file.zip"
 request = Finch.build(:get, url)
 
-Finch.stream(request, Lor.Finch, nil, fn
+Finch.stream(request, App.Finch, nil, fn
   {:status, status}, _ ->
     IO.inspect("Download assets status: #{status}")
 
@@ -34,6 +34,8 @@ Finch.stream(request, Lor.Finch, nil, fn
   {:data, data}, _ ->
     IO.binwrite(file, data)
 end)
+
+File.close(file)
 ```
 
 This code snippet downloads a large zip file, storing it in the `/tmp` directory. We first build the Finch request using `Finch.build/2`, and then stream the response by calling `Finch.stream/4`. By streaming the response, we can efficiently handle large files without consuming excessive memory. The data chunks are written directly to the file using `IO.binwrite/2` as they are received, making it an ideal approach for downloading large files.
