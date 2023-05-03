@@ -14,17 +14,21 @@ import logoPandascore from '@/images/logos/pandascore.png'
 import logoTtr from '@/images/logos/ttr.svg'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
-import { getAllPosts } from '@/lib/data'
+import { getData } from '@/lib/data'
 
-function Post({ post }) {
+function Data({ data }) {
   return (
     <Card as="article">
-      <Card.Title href={`/posts/${post.slug}`}>{post.title}</Card.Title>
-      <Card.Eyebrow as="time" dateTime={post.date} decorate>
-        {formatDate(post.date)}
+      <Card.Title
+        href={`${data.type === 'til' ? '/tils/' : '/posts/'}${data.slug}`}
+      >
+        {data.title}
+      </Card.Title>
+      <Card.Eyebrow as="time" dateTime={data.date} decorate>
+        {formatDate(data.date)}
       </Card.Eyebrow>
-      <Card.Description>{post.description}</Card.Description>
-      <Card.Cta>Read post</Card.Cta>
+      <Card.Description>{data.description}</Card.Description>
+      <Card.Cta>Read {data.type}</Card.Cta>
     </Card>
   )
 }
@@ -129,7 +133,7 @@ function Resume() {
   )
 }
 
-export default function Home({ posts }) {
+export default function Home({ datas }) {
   return (
     <>
       <Head>
@@ -172,8 +176,8 @@ export default function Home({ posts }) {
       <Container className="mt-24 md:mt-28">
         <div className="mx-auto grid max-w-xl grid-cols-1 gap-y-20 lg:max-w-none lg:grid-cols-2">
           <div className="flex flex-col gap-16">
-            {posts.map((post) => (
-              <Post key={post.slug} post={post} />
+            {datas.map((data) => (
+              <Data key={data.slug} data={data} />
             ))}
           </div>
           <div className="space-y-10 lg:pl-16 xl:pl-24">
@@ -193,7 +197,7 @@ export async function getStaticProps() {
 
   return {
     props: {
-      posts: (await getAllPosts())
+      datas: (await getData())
         .slice(0, 4)
         .map(({ component, ...meta }) => meta),
     },
