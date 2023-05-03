@@ -9,42 +9,38 @@ import _4_flow_broadcast from './4-flow-broadcast.png'
 import _cover from './cover.png'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2022-10-24',
   title: 'Probuild Ex Part five',
   tags: ['elixir', 'phoenix', 'liveview', 'tutorial', 'riot api'],
-  description:
-    'A league of legend probuilds with elixir phoenix, part five'
+  description: 'A league of legend probuilds with elixir phoenix, part five',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
 In [Part four](/posts/probuild-ex-part-four/) we implemented the search feature on our liveview.
 In this fifth and final part we are going to:
+
 - Create a new query to `fetch_game` with details in our context `App`
 - Create a bunch of function components to origanise and reuse markups
 - Create a live component `RowComponent`
-
 
 Part five assumes that you have already gone through [Part four](/posts/probuild-ex-part-four/) and have the code at a point where we can jump right in. If you want to checkout the companion code and fast forward to this point, do the following:
 
 ```shell
 git clone https://github.com/mrdotb/probuild_ex.git
 cd probuild_ex
-git checkout eb78ead3d201c1c74478001e728de3198c8b5a7b 
+git checkout eb78ead3d201c1c74478001e728de3198c8b5a7b
 ```
 
 ## Table of contents
 
-
 ## App fetch_game in details - [commit](https://github.com/mrdotb/probuild_ex/commit/6ce55d956e88f560b12304c27f20c6ed17d552fb)
 
 Edit `lib/probuild_ex/app.ex`
+
 ```elixir
 defmodule ProbuildEx.App do
   ...
@@ -78,11 +74,12 @@ defmodule ProbuildEx.App do
   end
 end
 ```
-The idea here is to get a game with the ten participants and their summoner organized by `team_id` and `team_position`. We are using postgres [array_position](array_position) in a [ecto fragment](https://hexdocs.pm/ecto/Ecto.Query.html#module-fragments) to sort per `team_position`.
 
+The idea here is to get a game with the ten participants and their summoner organized by `team_id` and `team_position`. We are using postgres [array_position](array_position) in a [ecto fragment](https://hexdocs.pm/ecto/Ecto.Query.html#module-fragments) to sort per `team_position`.
 
 Let's add some simple test to our `fetch_game/1` function.
 Edit `test/probuild_ex/app_test.exs`
+
 ```elixir
 defmodule ProbuildEx.AppTest do
   ...
@@ -102,17 +99,14 @@ end
 
 ## App game details - [commit](https://github.com/mrdotb/probuild_ex/commit/052cec3563e6e0770af6aac905e72a6f6e17a158)
 
-
 <SingleLightbox src={_1_app_diagram} alt="probuild ex UI diagram" />
 
-
-
 We will do the game details that appear when a row is clicked. But first because we we can reuse some markup for game details we will create two modules of dumb components `DdragonComponent` and `GridElementComponent`.
-
 
 ### Simple components
 
 Create `game_live/ddragon_component.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.DdragonComponent do
   @moduledoc false
@@ -154,9 +148,11 @@ defmodule ProbuildExWeb.GameLive.DdragonComponent do
   end
 end
 ```
+
 We put all the components related to `Ddragon`. Other than that nothing fancy it's simple [`Phoenix.Component`](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) than return markup.
 
 Create `game_live/grid_element_component.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.GridElementComponent do
   @moduledoc false
@@ -274,6 +270,7 @@ defmodule ProbuildExWeb.GameLive.GridElementComponent do
   end
 end
 ```
+
 We break up each element in our row into a function, some elements can be used in Game and Game details. Other than that it's simple [`Phoenix.Component`](https://hexdocs.pm/phoenix_live_view/Phoenix.Component.html) again.
 
 ### RowComponent
@@ -281,11 +278,12 @@ We break up each element in our row into a function, some elements can be used i
 For game details we will need another css grid.
 
 Replace your `assets/css/app.css`
+
 ```css
 /* This file is for your main application CSS */
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 /* Custom grids */
 .grid-participants-header {
@@ -307,8 +305,8 @@ Replace your `assets/css/app.css`
   grid-template-rows: auto auto;
   grid-template-columns: 20% 20% 60%;
   grid-template-areas:
-  "player kda versus"
-  "creation summoners build";
+    'player kda versus'
+    'creation summoners build';
 }
 .grid-team-participants {
   display: grid;
@@ -316,19 +314,19 @@ Replace your `assets/css/app.css`
   grid-template-rows: auto auto;
   grid-template-columns: 60% 20% 20%;
   grid-template-areas:
-  "summoner-champion kda summoners"
-  "build . gold";
+    'summoner-champion kda summoners'
+    'build . gold';
 }
 @media (min-width: theme('screens.md')) {
   .grid-participants {
     grid-gap: 0px;
     grid-template-columns: 11% 17% 12% 10% 10% 35% 4%;
-    grid-template-areas: "creation player versus kda summoners build ellipsis";
+    grid-template-areas: 'creation player versus kda summoners build ellipsis';
   }
   .grid-team-participants {
     grid-gap: 0px;
     grid-template-columns: 25% 11% 12% 12% 40%;
-    grid-template-areas: "summoner-champion summoners kda gold build ";
+    grid-template-areas: 'summoner-champion summoners kda gold build ';
   }
 }
 .grid-area-creation {
@@ -404,12 +402,12 @@ Replace your `assets/css/app.css`
   transition: opacity 1s ease-out;
 }
 
-.phx-loading{
+.phx-loading {
   cursor: wait;
 }
 
 .phx-modal {
-  opacity: 1!important;
+  opacity: 1 !important;
   position: fixed;
   z-index: 1;
   left: 0;
@@ -417,7 +415,7 @@ Replace your `assets/css/app.css`
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .phx-modal-content {
@@ -457,30 +455,51 @@ Replace your `assets/css/app.css`
   animation: 0.2s ease-out 0s normal forwards 1 fade-out-keys;
 }
 
-@keyframes fade-in-scale-keys{
-  0% { scale: 0.95; opacity: 0; }
-  100% { scale: 1.0; opacity: 1; }
+@keyframes fade-in-scale-keys {
+  0% {
+    scale: 0.95;
+    opacity: 0;
+  }
+  100% {
+    scale: 1;
+    opacity: 1;
+  }
 }
 
-@keyframes fade-out-scale-keys{
-  0% { scale: 1.0; opacity: 1; }
-  100% { scale: 0.95; opacity: 0; }
+@keyframes fade-out-scale-keys {
+  0% {
+    scale: 1;
+    opacity: 1;
+  }
+  100% {
+    scale: 0.95;
+    opacity: 0;
+  }
 }
 
-@keyframes fade-in-keys{
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+@keyframes fade-in-keys {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
-@keyframes fade-out-keys{
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+@keyframes fade-out-keys {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 ```
 
 I use [grid-area](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-area) again it simplify the responsive version but it's not supported by tailwind yet so we need to add some extra css.
 
 Create `game_live/row_component.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.RowComponent do
   use ProbuildExWeb, :live_component
@@ -607,9 +626,11 @@ defmodule ProbuildExWeb.GameLive.RowComponent do
   end
 end
 ```
+
 This time it's a smart compononent aka [live_component](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveComponent.html)
 
 The component should achieve the following:
+
 - When we click on the row we should fetch the game details and display it
 - While it's loading we should put our loading animation `<.spinner />`
 - If the row is clicked again we should hide the game details
@@ -619,27 +640,26 @@ In `GameLive.Index` we used `send()` with `handle_info()` to do a asynchronous l
 
 The flow for a click on `RowComponent` is the following, notice we are using [JS.push](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#push/1) and [JS.toggle](https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.JS.html#toggle/1)
 
-
 <SingleLightbox src={_2_flow_diagram} alt="probuild ex flow diagram" />
 
-
-
 The `render` function:
+
 - We make usage of our `GridElementComponent`
 - Notice the `phx-click` with the `phx-target` `@myself` that call `JS.push` and `JS.toggle` shown in the diagram.
 - The `cond` to check if we should display the `<.spinner/>` or the `<.game_detail />`
 
 The `game_detail` function:
+
 - We iterate over our participants and we add an index with `Enum.with_index`
 - Our participants are ordered per team and role so using the index we can split them in two blocks of five easily
 - We make usage of our `GridElementComponent`
-
 
 ### GameLive view
 
 Now we need to make our `GameLive` use our new `RowComponent`.
 
 Edit `game_live/index.html.heex` at the top of the file add the `alias` and the `import`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   ...
@@ -650,6 +670,7 @@ defmodule ProbuildExWeb.GameLive.Index do
 ```
 
 Edit `game_live/index.html.heex`
+
 ```elixir
 <div class="flex flex-col">
 
@@ -724,11 +745,10 @@ In the view we replaced the spinner images with our `<.spinner/>` components and
 
 Visit [http://localhost:4000](http://localhost:4000) we should see
 
-
-<SingleLightbox src={_3_game_details} alt="probuild ex game details screenshot" />
-
-
-
+<SingleLightbox
+  src={_3_game_details}
+  alt="probuild ex game details screenshot"
+/>
 
 ## Add game in realtime - [commit](https://github.com/mrdotb/probuild_ex/commit/e4b01b620d858232729d2cb40444768a40fcbf8d)
 
@@ -737,6 +757,7 @@ Now we want to add game in realtime to our dashboard, Phoenix come with [PubSub]
 ### Config PubSub
 
 Edit `config/config.exs` replace the `:pubsub_server` key with the atom `:pbx_pubsub`
+
 ```elixir
 config :probuild_ex, ProbuildExWeb.Endpoint,
   url: [host: "localhost"],
@@ -744,9 +765,11 @@ config :probuild_ex, ProbuildExWeb.Endpoint,
   pubsub_server: :pbx_pubsub,
   live_view: [signing_salt: "0VmmhuEM"]
 ```
+
 I prefer to use an atom over a module that does not exist.
 
 Edit `lib/probuild_ex/application.ex` replace the `:name` key
+
 ```elixir
       # Start the PubSub system
       {Phoenix.PubSub, name: :pbx_pubsub},
@@ -757,6 +780,7 @@ Edit `lib/probuild_ex/application.ex` replace the `:name` key
 We will add some code to broadcast a game when the multi that create game is successfull.
 
 Edit `lib/probuild_ex/games.ex`
+
 ```elixir
 defmodule ProbuildEx.Games do
 ...
@@ -792,22 +816,22 @@ defmodule ProbuildEx.Games do
 end
 ```
 
-We check the result of the multi and if it's a successfull we broadcast on the topic `pro_participant:new` a message with the new `participant_id` of pro players. 
+We check the result of the multi and if it's a successfull we broadcast on the topic `pro_participant:new` a message with the new `participant_id` of pro players.
 
 It's possible that a game have many pro players and in this case we should broadcast one message per pro_player.
 
-
 Here is a diagram flow
 
-<SingleLightbox src={_4_flow_broadcast} alt="probuild ex game details screenshot" />
-
-
-
+<SingleLightbox
+  src={_4_flow_broadcast}
+  alt="probuild ex game details screenshot"
+/>
 
 ### Add a fetch_pro_participant in app context
 
 Because we broadcast `participant_id` we need a function to retrieve the participant detail in the database.
 Edit `lib/probuild_ex/games.ex`
+
 ```elixir
 defmodule ProbuildEx.Games do
 ...
@@ -830,6 +854,7 @@ defmodule ProbuildEx.Games do
   ...
 end
 ```
+
 We use the same `pro_participant_base_query()` as in the `list_*` we also add a reduce clause to be able to filter per `participant_id`
 
 ### Subscribe to the topic in the GameLive
@@ -837,6 +862,7 @@ We use the same `pro_participant_base_query()` as in the `list_*` we also add a 
 We want to add a button to subscribe / unsubscribe to the topic.
 
 Edit `game_live/index.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
 ...
@@ -907,6 +933,7 @@ end
 ```
 
 Edit `game_live/index.html.heex`
+
 ```elixir
     <div class="mt-3 flex flex-wrap justify-center">
 
@@ -926,14 +953,14 @@ Edit `game_live/index.html.heex`
 ```
 
 We added:
+
 - a boolean `subscribed?` to the `@default` assigns.
 - a `handle_event` for the subscribe / unsubscribe and set the boolean in assign
-- a `handle_info` that will receive the broadcasted message with the participant_id and fetch it  using the current search options (if it does not match the current search it will no be prepend)
+- a `handle_info` that will receive the broadcasted message with the participant_id and fetch it using the current search options (if it does not match the current search it will no be prepend)
 
 I subscribed to the topic by clicking on the button then I filter by TOP position it also filter the real time game.
 
 <YouTube videoId="00IscrUHo2o" />
-
 
 Perfomance wise it's not the best, it does to much db query but I want to keep it simple.
 
@@ -942,6 +969,7 @@ Perfomance wise it's not the best, it does to much db query but I want to keep i
 You need to register on [fly.io](https://fly.io/).
 
 Open a shell at the root of `probuild_ex`
+
 ```bash
 # Install fly.io
 $ curl -L https://fly.io/install.sh | sh
@@ -1003,6 +1031,7 @@ When you re ready to deploy, use 'fly deploy'.
 
 We need to add our riot token to the generated `runtime.exs`
 On `config/runtime.exs` add
+
 ```elixir
 if config_env() == :prod do
   ...
@@ -1011,9 +1040,10 @@ end
 ```
 
 Open the shell again
+
 ```shell
 # We add our RIOT_TOKEN to the secrets don't forget to refresh it if it's a development key https://developer.riotgames.com/
-$ fly secrets set RIOT_TOKEN=RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx   
+$ fly secrets set RIOT_TOKEN=RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 Secrets are staged for the first deployment
 
 # Deploy
@@ -1028,6 +1058,7 @@ It should open the url and start collecting data
 ## Closing thoughts
 
 Well done and thanks for sticking with me to the end! We covered quite a lot of ground and hopefully you picked up a couple of cool tips and tricks along the way. I encourage you to continue there still a lot that we can do with all those data. Examples:
+
 - A new liveview to display the most picked champions of pro player per patch / role/ region
 - A new liveview to display the best / worst champions winrate
 - Add new source to add pro player / streamers
@@ -1039,6 +1070,3 @@ If you want to show me what you did fork the [repo](https://github.com/mrdotb/pr
 Be sure to sign up to the newsletter so that you won't miss my next article. Feel free to leave comments or feedback especially if you did the whole series. I also appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
 
 Until Next Time !
-
-
-

@@ -8,14 +8,10 @@ export const meta = {
   date: '2020-11-16',
   title: 'Mkfifo',
   tags: ['mkfifo', 'shell', 'til'],
-  description:
-    'How to use mkfifo ?'
+  description: 'How to use mkfifo ?',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 mkfifo create a named pipe.
 Opening a FIFO for reading normally blocks until some other process opens the
@@ -42,5 +38,3 @@ echo "Hello fifo" > /tmp/fifo1
 ```
 
 The cat from the first shell should have write `Hello fifo`
-
-

@@ -5,30 +5,28 @@ import Image from 'next/image'
 import _cover from './cover.webp'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2022-12-31',
   title: 'A phoenix plug to prevent search engine on specific page',
   tags: ['elixir', 'phoenix', 'plug', 'seo'],
   description:
-    'Prevent search engine on specific page using the X-Robots-tag header'
+    'Prevent search engine on specific page using the X-Robots-tag header',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 For a current project I needed to prevent search engine to index the admin dashboard.
 
 There is different way to achieve that. The method I found the most conveniant with phoenix is to add a `X-Robots-tag` header using a plug.
 
 The `X-Robots-tag` header can take several value the one we are intrested are:
-- **noindex** *Do not show this page, media, or resource in search results. If you don't specify this directive, the page, media, or resource may be indexed and shown in search results.*
-- **nofollow** *Do not follow the links on this page. If you don't specify this directive, Google may use the links on the page to discover those linked pages. Learn more about nofollow.*
+
+- **noindex** _Do not show this page, media, or resource in search results. If you don't specify this directive, the page, media, or resource may be indexed and shown in search results._
+- **nofollow** _Do not follow the links on this page. If you don't specify this directive, Google may use the links on the page to discover those linked pages. Learn more about nofollow._
 
 First, create a new module in your phoenix app.
+
 ```elixir
 defmodule AppWeb.NoIndexPlug do
   @moduledoc """
@@ -48,6 +46,7 @@ end
 ```
 
 Add the plug in your router.
+
 ```elixir
 defmodule AppWeb.Router do
 
@@ -70,7 +69,8 @@ defmodule AppWeb.Router do
 end
 ```
 
-Let's verify using a `curl` that the header is here. *We use `-I` option to only return headers*
+Let's verify using a `curl` that the header is here. _We use `-I` option to only return headers_
+
 ```shell
 curl -I http://localhost:4000/admin
 > HTTP/1.1 200 OK
@@ -81,5 +81,3 @@ curl -I http://localhost:4000/admin
 Sucess !
 
 Read more about robots directives [here](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag)
-
-

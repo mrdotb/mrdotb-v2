@@ -3,26 +3,20 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-12-16',
   title: 'Pass $ENV to awk',
   tags: ['awk', 'shell', 'til'],
-  description:
-    'Pass environment variable to awk'
+  description: 'Pass environment variable to awk',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
 It's not possible to use env variable in awk but we can pass them like this.
+
 ```shell
 export VAR=test
 echo | awk -v env_var="$VAR" '{print "The value of VAR is " env_var}'
 > The value of VAR is test
 ```
-
-

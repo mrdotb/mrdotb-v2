@@ -10,25 +10,20 @@ import _5_timeago_hook from './5-timeago-hook.png'
 import _cover from './cover.png'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2022-10-11',
   title: 'Probuild Ex Part three',
   tags: ['elixir', 'phoenix', 'liveview', 'hook', 'ets', 'tutorial', 'ddragon'],
-  description:
-    'A league of legend probuilds with elixir phoenix, part three'
+  description: 'A league of legend probuilds with elixir phoenix, part three',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
-
 In [Part two](/posts/probuild-ex-part-two/) we build the data collection pipelines.
 In this third part, we are going to create:
+
 - A new context `App` to will hold the queries for the application
 - A styled liveview with tailwind to display our controls and data nicely
 - A [liveview hook](https://hexdocs.pm/phoenix_live_view/js-interop.html#client-hooks-via-phx-hook) to use [timeago.js](https://github.com/hustcc/timeago.js)
@@ -39,19 +34,19 @@ Part three assumes that you have already gone through Part two and have the code
 ```shell
 git clone https://github.com/mrdotb/probuild_ex.git
 cd probuild_ex
-git checkout 9f3016f5992de0ad3bd8d90636f1d8ff25fd8508 
+git checkout 9f3016f5992de0ad3bd8d90636f1d8ff25fd8508
 ```
 
 ## Table of contents
 
-
 ## Have a peak 👀 at the end of series application
-https://probuild.fly.dev/
 
+https://probuild.fly.dev/
 
 ## Install tailwindcss - [commit](https://github.com/mrdotb/probuild_ex/commit/f108bfbc9af79e8503c1884989c0d78a29ee1e08)
 
 Edit `mix.exs`
+
 ```elixir
 def deps do
   [
@@ -69,6 +64,7 @@ end
 ```
 
 Edit `config/config.exs`
+
 ```elixir
 config :tailwind,
   version: "3.1.8",
@@ -83,6 +79,7 @@ config :tailwind,
 ```
 
 Edit `config/dev.exs`
+
 ```elixir
 config :probuild_ex, ProbuildExWeb.Endpoint,
   ...
@@ -95,24 +92,24 @@ config :probuild_ex, ProbuildExWeb.Endpoint,
 ```
 
 Run
+
 ```shell
 mix tailwind.install
 ```
+
 It will edit `assets/css/app.css` and `assets/js/app.js` and create `assets/tailwind.config.js`.
 
 At this point we should be good to go let's try some tailwind classes.
 
 edit page/index.html.heex` and replace the content
+
 ```html
-<h1 class="text-3xl text-red-500 font-bold underline">Welcome to Phoenix!</h1>
+<h1 class="text-3xl font-bold text-red-500 underline">Welcome to Phoenix!</h1>
 ```
 
 Visit [http://localhost:4000](http://localhost:4000) we should see our `Welcome to Phoenix!` styled
 
-
 <SingleLightbox src={_1_tailwind_welcome} alt="tailwind welcome" />
-
-
 
 ## Edit root layout add tailwindui nav - [commit](https://github.com/mrdotb/probuild_ex/commit/4bcf25c51963d3fad99b8f9e99df3c39554bcb55)
 
@@ -202,20 +199,21 @@ I took one of the nice navigation and layout from [tailwindui](https://tailwindu
 We need a bit of js to make the mobile navigation work.
 
 Edit `assets/js/app.js` add
+
 ```javascript
 // tailwind ui mobile nav
-const $toggleMenu = document.getElementById("toggle-menu")
-const $burger = document.getElementById("burger")
-const $xMark = document.getElementById("x-mark")
-const $mobileMenu = document.getElementById("mobile-menu")
+const $toggleMenu = document.getElementById('toggle-menu')
+const $burger = document.getElementById('burger')
+const $xMark = document.getElementById('x-mark')
+const $mobileMenu = document.getElementById('mobile-menu')
 
-$toggleMenu.addEventListener("click", event => {
-  event.preventDefault();
-  ["hidden", "block"].forEach(className => {
+$toggleMenu.addEventListener('click', (event) => {
+  event.preventDefault()
+  ;['hidden', 'block'].forEach((className) => {
     $burger.classList.toggle(className)
     $xMark.classList.toggle(className)
   })
-  $mobileMenu.classList.toggle("hidden")
+  $mobileMenu.classList.toggle('hidden')
 })
 ```
 
@@ -223,16 +221,14 @@ Nothing complicate just some css class toggle when the `$toggleMenu` is clicked
 
 Visit [http://localhost:4000](http://localhost:4000) we should see
 
-
 <SingleLightbox src={_2_setup_nav} alt="setup navigation in root layout" />
-
-
 
 ## Create App context - [commit](https://github.com/mrdotb/probuild_ex/commit/e9ea111cbc37a1d58afbcbeb9ef872ba21af5c76)
 
 We will create another context that will hold the queries for the application.
 
 Create `lib/probuild_ex/app.ex`
+
 ```elixir
 defmodule ProbuildEx.App do
   @moduledoc """
@@ -273,6 +269,7 @@ Later we will use the `_opts` to filter the query according to what params the u
 We will setup the liveview.
 
 In `lib/probuild_ex_web/router.ex` replace the `get "/", PageController, :index`
+
 ```elixir
 defmodule ProbuildExWeb.Router do
   ...
@@ -286,14 +283,17 @@ defmodule ProbuildExWeb.Router do
   ...
 end
 ```
+
 Here we setup the live route to our `GameLive` view.
 
 Create the folder `game_live`
+
 ```shell
 mkdir -p lib/probuild_ex_web/live/game_live/
 ```
 
 Create `game_live/index.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -316,9 +316,11 @@ defmodule ProbuildExWeb.GameLive.Index do
   end
 end
 ```
+
 We use the query we did earlier and assigns the result to be used in the liveview. We will use the `apply_action` pattern for our liveview.
 
 Create `game_live/index.html.heex`
+
 ```elixir
 <div class="flex flex-col">
   <div class="flex justify-center">
@@ -422,8 +424,8 @@ Create `game_live/index.html.heex`
 
 I took some components from [tailwindui](https://tailwindui.com/) to do the big search and buttons. The rows layout is a mix of [flexbox](https://tailwindcss.com/docs/flex) and [grid](https://tailwindcss.com/docs/display#grid). I found [grid-area](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-area) to simplify the responsive version a lot but it's not supported by tailwind so we need to add some extra css.
 
-
 Edit `assets/css/app.css`
+
 ```css
 ...
 /* Custom grid for participants */
@@ -443,14 +445,14 @@ Edit `assets/css/app.css`
   grid-template-rows: auto auto;
   grid-template-columns: 20% 20% 60%;
   grid-template-areas:
-  "player kda versus"
-  "creation summoners build";
+    'player kda versus'
+    'creation summoners build';
 }
 @media (min-width: theme('screens.md')) {
   .grid-participants {
     grid-gap: 0px;
     grid-template-columns: 11% 17% 12% 10% 10% 35% 4%;
-    grid-template-areas: "creation player versus kda summoners build ellipsis";
+    grid-template-areas: 'creation player versus kda summoners build ellipsis';
   }
 }
 .grid-area-creation {
@@ -478,10 +480,7 @@ Edit `assets/css/app.css`
 
 Visit [http://localhost:4000](http://localhost:4000) we should see
 
-
 <SingleLightbox src={_3_probuild_rows} alt="probuild ex rows" />
-
-
 
 ## Create time ago hook - [commit](https://github.com/mrdotb/probuild_ex/commit/8983396fd31d1785d3a157f502303ce8d27f55fd)
 
@@ -494,7 +493,7 @@ Create file `assets/vendor/timeago.js`
 Copy the content of this [gist](https://gist.githubusercontent.com/mrdotb/c00411486718cf3ad699295d4bbdf311/raw/58c89195c73683ef170a30cc1628a40eca14c753/timeago.js) inside.
 
 ```javascript
-import {render, cancel} from "../vendor/timeago.js"
+import { render, cancel } from '../vendor/timeago.js'
 
 let Hooks = {}
 Hooks.TimeAgo = {
@@ -506,11 +505,16 @@ Hooks.TimeAgo = {
   },
   destroyed() {
     cancel(this.el)
-  }
+  },
 }
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_token: csrfToken}})
+let csrfToken = document
+  .querySelector("meta[name='csrf-token']")
+  .getAttribute('content')
+let liveSocket = new LiveSocket('/live', Socket, {
+  hooks: Hooks,
+  params: { _csrf_token: csrfToken },
+})
 ```
 
 - We import `render` and `cancel` function from `timeago.js`
@@ -521,36 +525,34 @@ let liveSocket = new LiveSocket("/live", Socket, {hooks: Hooks, params: {_csrf_t
   - `updated` trigger timeago `cancel` when the element has been removed from the DOM
 - Add the `Hooks` object to the `LiveSocket` config
 
-
 Now let's use the hook in our liveview template.
 
 Edit `game_live/index.html.heex` replace `<%# TODO time ago %>`
+
 ```html
 <time id={"time-ago-#{participant.id}"} phx-hook="TimeAgo" datetime={participant.game.creation}></time>
 ```
+
 - We use the [`<time>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/time) html element.
 - Hook require a unique id we created one using `participant_id`
 - we set datetime attribute to `game.creation` timestamp it's the value timeago.js will read
-
 
 We should get the time ago displayed nicely
 
 <SingleLightbox src={_5_timeago_hook} alt="timeago hook in action screenshot" />
 
-
-
-
 ## Create Ddragon to get assets pictures - [commit](https://github.com/mrdotb/probuild_ex/commit/0633b54a6465bf73273074267ea57cb75c0b3dca)
 
 Notice for know we put a placeholder for the champions summoners and items. In order to display the real one we need to convert `champion_id`, `summoner_id` and `item_id` to pictures. We will create a small api client to ddragon (the league of legend cdn) and a cache it using [ETS](https://elixir-lang.org/getting-started/mix-otp/ets.html).
 
-
 Create the ddragon folder
+
 ```shell
 mkdir lib/probuild_ex/ddragon
 ```
 
 Create `lib/probuild_ex/ddragon/api.ex`
+
 ```elixir
 defmodule ProbuildEx.Ddragon.Api do
   @moduledoc """
@@ -581,11 +583,12 @@ defmodule ProbuildEx.Ddragon.Api do
   end
 end
 ```
-We created a HTTP client to the ddragon cdn using [Tesla](https://hexdocs.pm/tesla/readme.html)
 
+We created a HTTP client to the ddragon cdn using [Tesla](https://hexdocs.pm/tesla/readme.html)
 
 Now we will create a GenServer that use `ETS` as cache mechanism.
 Create `lib/probuild_ex/ddragon/cache.ex`
+
 ```elixir
 defmodule ProbuildEx.Ddragon.Cache do
   @moduledoc """
@@ -704,6 +707,7 @@ end
 Let's go slowly. First, we make use of the `restart: :transient` option to be able to stop our GenServer under `:normal` condition.
 
 Let's break what is happening:
+
 - On Client:
   - `start_link/1` function don't need any args here. The GenServer will be started under the module name using `__MODULE__`
   - `fetch_champion_img/1` will receive a `champion_id` and return the name of to the champion image or an error if we can't find it
@@ -715,6 +719,7 @@ Let's break what is happening:
   - `request_and_cache_*/2` we fetch the last versions of the game then we retrieve the ressource and insert it in the `ETS` table
 
 Create `lib/probuild_ex/ddragon.ex`
+
 ```elixir
 defmodule ProbuildEx.Ddragon do
   @moduledoc """
@@ -770,10 +775,12 @@ defmodule ProbuildEx.Ddragon do
   end
 end
 ```
+
 We made this helper module with three functions to get the image for a ressource.
 In the end item url can be calculated easily with `item_id` only but it's not the case for champions and summoners.
 
 Edit `lib/probuild_ex/application.ex`
+
 ```elixir
   def start(_type, _args) do
     children = [
@@ -784,50 +791,50 @@ Edit `lib/probuild_ex/application.ex`
     ...
   end
 ```
+
 We add the Cache to the list of children, when the application start requests to ddragon will be done and cached.
 
 Edit `game_live/index.ex`
+
 ```elixir
 ...
 alias ProbuildEx.Ddragon
 ...
 ```
+
 We add an alias to `Ddragon` module on top of `GameLive.Index`
 
 Edit `game_live/index.html.heex`
+
 ```html
-...
-<%= img_tag(Ddragon.get_champion_image(participant.game.version, participant.champion_id), class: "w-8 h-8 rounded-full") %>
+... <%= img_tag(Ddragon.get_champion_image(participant.game.version,
+participant.champion_id), class: "w-8 h-8 rounded-full") %>
 <span>vs</span>
-<%= img_tag(Ddragon.get_champion_image(participant.game.version, participant.opponent_participant.champion_id), class: "w-8 h-8 rounded-full") %>
-...
-<%= for summoner_key <- participant.summoners do %>
-  <%= img_tag(Ddragon.get_summoner_image(participant.game.version, summoner_key), class: "w-8 h-8 border border-gray-400") %>
-<% end %>
-...
-<%= for item_key <- participant.items do %>
-  <%= if src = Ddragon.get_item_image(participant.game.version, item_key) do %>
-    <img src={src} class="w-8 h-8" />
-  <% else %>
-    <div class="bg-gray-900 w-8 h-8 border border-gray-400"></div>
-  <% end %>
-<% end %>
-...
+<%= img_tag(Ddragon.get_champion_image(participant.game.version,
+participant.opponent_participant.champion_id), class: "w-8 h-8 rounded-full") %>
+... <%= for summoner_key <- participant.summoners do %> <%=
+img_tag(Ddragon.get_summoner_image(participant.game.version, summoner_key),
+class: "w-8 h-8 border border-gray-400") %> <% end %> ... <%= for item_key <-
+participant.items do %> <%= if src =
+Ddragon.get_item_image(participant.game.version, item_key) do %>
+<img src="{src}" class="h-8 w-8" />
+<% else %>
+<div class="h-8 w-8 border border-gray-400 bg-gray-900"></div>
+<% end %> <% end %> ...
 ```
+
 We use our Ddragon module to convert the ressource id into images and replace the placeholder.
 
 And now we should get our rows with proper images
 
 <SingleLightbox src={_4_rows_with_assets} alt="rows with assets" />
 
-
-
-
 ## Closing thoughts
 
 Well done and thanks for sticking with me to the end! We built the foundation for our liveview application.
 
 In the next part we will work on the search query and the integration in our liveview:
+
 - filter the query by `pro`, `platform_id`, `team_position`, `champion`
 - paginate the query with [scrivener_ecto](https://github.com/drewolson/scrivener_ecto)
 - make an infinite scroll with a liveview hook
@@ -835,6 +842,3 @@ In the next part we will work on the search query and the integration in our liv
 Be sure to sign up to the newsletter so that you won't miss the next Part. Feel free to leave comments or feedback. I also appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
 
 See you soon !
-
-
-

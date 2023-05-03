@@ -6,8 +6,8 @@ export const createSubscriber = (email, groupId, token) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'X-MailerLite-Apikey': token
-    }
+      'X-MailerLite-Apikey': token,
+    },
   }
   return fetch(url, options)
 }
@@ -19,7 +19,11 @@ export default async function handler(req, res) {
     return res.status(422).json({ error: 'Email is not defined', ok: false })
   }
 
-  const request = await createSubscriber(body.email, process.env.GROUP_ID, process.env.MAILERLITE_API_TOKEN)
+  const request = await createSubscriber(
+    body.email,
+    process.env.GROUP_ID,
+    process.env.MAILERLITE_API_TOKEN
+  )
 
   if (![200, 201].includes(request.status)) {
     return res.status(422).json({ error: 'Could not subscribe', ok: false })

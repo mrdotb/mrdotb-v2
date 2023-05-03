@@ -10,7 +10,9 @@ function Data({ data }) {
   return (
     <article className="md:grid md:grid-cols-4 md:items-baseline">
       <Card className="md:col-span-3">
-        <Card.Title href={`${data.type === 'til' ? '/tils/' : '/posts/'}${data.slug}`}>
+        <Card.Title
+          href={`${data.type === 'til' ? '/tils/' : '/posts/'}${data.slug}`}
+        >
           {data.title}
         </Card.Title>
         <Card.Eyebrow
@@ -35,7 +37,7 @@ function Data({ data }) {
   )
 }
 
-export default function Tag({datas}) {
+export default function Tag({ datas }) {
   const router = useRouter()
   const tag = router.query.tag
 
@@ -63,12 +65,12 @@ export default function Tag({datas}) {
 
 export async function getStaticPaths() {
   const uniqueTags = await getUniqueTags()
-  const paths = uniqueTags.map(tag => ({
-    params: {tag: tag}
+  const paths = uniqueTags.map((tag) => ({
+    params: { tag: tag },
   }))
   return {
     paths: paths,
-    fallback: false
+    fallback: false,
   }
 }
 

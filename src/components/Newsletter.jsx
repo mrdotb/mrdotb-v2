@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Button } from '@/components/Button'
 
 function MailIcon(props) {
@@ -26,36 +26,36 @@ function MailIcon(props) {
 }
 
 export function Newsletter() {
-  const { push } = useRouter();
-  const [formData, setFormData] = useState({});
-  const [error, setError] = useState('');
+  const { push } = useRouter()
+  const [formData, setFormData] = useState({})
+  const [error, setError] = useState('')
 
   const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = JSON.stringify(formData);
+    event.preventDefault()
+    const data = JSON.stringify(formData)
 
     fetch('/api/register', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: data
+      body: data,
     })
-      .then(response => response.json())
-      .then(data => {
-        if(data.ok) {
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.ok) {
           push('/thank-you')
         } else {
           setError(data.error)
         }
       })
-      .catch(error => console.error(error));
-  };
+      .catch((error) => console.error(error))
+  }
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
-  };
+    const { name, value } = event.target
+    setFormData({ ...formData, [name]: value })
+  }
 
   return (
     <form
@@ -67,10 +67,11 @@ export function Newsletter() {
         <span className="ml-3">Stay up to date</span>
       </h2>
       <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-        Sign up for the mailing list and get notified via email when new blog posts come out.
+        Sign up for the mailing list and get notified via email when new blog
+        posts come out.
       </p>
       <div className="mt-6 flex flex-col">
-        <div className='flex'>
+        <div className="flex">
           <input
             name="email"
             type="email"
@@ -84,7 +85,11 @@ export function Newsletter() {
             Join
           </Button>
         </div>
-        {error !== '' && <p className="mt-2 text-sm text-red-600" id="email-error">{error}</p>}
+        {error !== '' && (
+          <p className="mt-2 text-sm text-red-600" id="email-error">
+            {error}
+          </p>
+        )}
       </div>
     </form>
   )

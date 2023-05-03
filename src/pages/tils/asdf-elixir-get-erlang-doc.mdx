@@ -3,22 +3,18 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2021-05-06',
   title: 'ASDF elixir iex get erlang doc',
   tags: ['elixir', 'erlang', 'til'],
-  description:
-    'Enable doc for erlang function in iex'
+  description: 'Enable doc for erlang function in iex',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
 When we try to get the doc of a erlang function we got
+
 ```elixir
 h :file.write
 ...
@@ -37,5 +33,3 @@ iex
 h :file.write
 Success doc is here !
 ```
-
-

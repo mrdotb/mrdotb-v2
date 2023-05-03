@@ -3,20 +3,16 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2023-04-30',
   title: 'Downloading Large Files with Finch in Elixir',
   tags: ['elixir', 'finch', 'til'],
   description:
-    'Learn how to efficiently download large files in Elixir using the Finch HTTP client library. This article provides a code example that demonstrates how to stream and store large zip files on your local system.'
+    'Learn how to efficiently download large files in Elixir using the Finch HTTP client library. This article provides a code example that demonstrates how to stream and store large zip files on your local system.',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 In this TIL, we will explore how to download large files using the Finch HTTP client library in Elixir. [Finch](https://github.com/sneako/finch) is a highly efficient, concurrent HTTP client that utilizes the powerful concurrency features provided by Elixir.
 

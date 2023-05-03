@@ -3,20 +3,15 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2021-05-19',
   title: 'Download file with hackney',
   tags: ['elixir', 'erlang', 'til'],
-  description:
-    'Download file with hackney'
+  description: 'Download file with hackney',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 # Download a file with hackney
 
@@ -29,5 +24,3 @@ Simply downloading a file with [hackney](https://github.com/benoitc/hackney)
 {:ok, body} = :hackney.body(ref)
 File.write!(path, body, [:write, :binary])
 ```
-
-

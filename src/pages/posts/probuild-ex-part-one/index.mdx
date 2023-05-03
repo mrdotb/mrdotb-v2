@@ -8,27 +8,23 @@ import _3_developer_riotgames from './3-developer-riotgames.png'
 import _cover from './cover.png'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2022-09-13',
   title: 'Probuild Ex Part One',
   tags: ['elixir', 'phoenix', 'ecto', 'tutorial', 'riot api'],
-  description:
-    'A league of legend probuilds with elixir phoenix, part one.'
+  description: 'A league of legend probuilds with elixir phoenix, part one.',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
 In this series we will be writing our own [league of legends](https://www.leagueoflegends.com/) probuilds.
 
-*A league of legend probuilds provide easy access league of legends to Pro players builds accross regions ex: ([probuilds.net](https://www.probuilds.net/), [probuildstats.com](https://probuildstats.com/))*
+_A league of legend probuilds provide easy access league of legends to Pro players builds accross regions ex: ([probuilds.net](https://www.probuilds.net/), [probuildstats.com](https://probuildstats.com/))_
 
 It's an interesting app to develop, together we will:
+
 - consume the [REST riot api](https://developer.riotgames.com/)
 - make a [cron](https://en.wikipedia.org/wiki/Cron) like process to fetch fresh data
 - insert it in our database using [transaction](https://en.wikipedia.org/wiki/Database_transaction)
@@ -36,10 +32,10 @@ It's an interesting app to develop, together we will:
 - add new data in realtime to our dashboard with [Phoenix PubSub](https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html)
 - deploy it to production with [fly.io](https://fly.io/)
 
-
 ## Table of contents
 
 ## Have a peak 👀 at the final result
+
 https://probuild.fly.dev/
 
 ## Stack used
@@ -56,6 +52,7 @@ https://probuild.fly.dev/
   - Free and open-source relational database
 
 If you are new to Elixir / Phoenix Framework you will have to install:
+
 - https://elixir-lang.org/install.html
 - https://hexdocs.pm/phoenix/installation.html
 - https://www.postgresql.org/download/
@@ -66,10 +63,7 @@ If you are new to Elixir / Phoenix Framework you will have to install:
 
 I used [excalidraw](https://excalidraw.com/) to make this diagram.
 
-
 <SingleLightbox src={_1_app_diagram} alt="probuild ex UI diagram" />
-
-
 
 I took inspiration from [probuilds.net](https://www.probuilds.net/) and [probuildstats.com](https://probuildstats.com/)
 
@@ -92,15 +86,14 @@ The summoner represent a league of legends account. Pro players have many accoun
 
 ```json
 {
-    "id": "2cNWTjUhUDNQlS-WEB1mIj6bePcdTxz17Gecw4RDQ90H4qA",
-    "accountId": "5H_Q0vPz0WFtt1mzOKicsavLEuYjLSDG-gNsKVBO4FjQBg",
-    "puuid": "8tjefad_ZLY2X8UbmwYlR1PBtaRgJBxcOcvFZ8tMy6f4bw56fMaIvLoqA87DK3yzqihZs7L-VQCdBw",
-    "name": "GodinDatZotak",
-    "profileIconId": 7,
-    "revisionDate": 1662838064000,
-    "summonerLevel": 115
+  "id": "2cNWTjUhUDNQlS-WEB1mIj6bePcdTxz17Gecw4RDQ90H4qA",
+  "accountId": "5H_Q0vPz0WFtt1mzOKicsavLEuYjLSDG-gNsKVBO4FjQBg",
+  "puuid": "8tjefad_ZLY2X8UbmwYlR1PBtaRgJBxcOcvFZ8tMy6f4bw56fMaIvLoqA87DK3yzqihZs7L-VQCdBw",
+  "name": "GodinDatZotak",
+  "profileIconId": 7,
+  "revisionDate": 1662838064000,
+  "summonerLevel": 115
 }
-
 ```
 
 The match represent a game of league of legend. It's a lot of data there, we will just take what we need. You can check a match full definition on the riot api documentation [getMatch](https://developer.riotgames.com/apis#match-v5/GET_getMatch)
@@ -131,7 +124,8 @@ There is no open/free api to my knowledge of league professional player. The mor
 
 `https://stats2.u.gg/pro/pro-list.json`
 
-*One summoner from UGG json*
+_One summoner from UGG json_
+
 ```json
 [
   {
@@ -157,10 +151,7 @@ I used [datagrip](https://www.jetbrains.com/datagrip/) to make this DB diagram.
 - `game` have 10 participants (league of legends is a 5vs5 players game)
 - `participant` have one opponent `participant` (participant have an opponent in the enemy team who have the same position ex: Middle, Top ...)
 
-
-
 <SingleLightbox src={_2_db_diagram} alt="DB diagram with datagrip" />
-
 
 ## Show me the code!
 
@@ -170,15 +161,16 @@ The final repo is on [github](https://github.com/mrdotb/probuild_ex) in case you
 
 ### Generate a new Phoenix project and install dependencies - [commit](https://github.com/mrdotb/probuild_ex/commit/7388ce67fec3f56309232f55fe4759feb0437bda)
 
-*If you did not install elixir, phoenix and postgres yet check the links in [stack used](#stack-used)*
-
+_If you did not install elixir, phoenix and postgres yet check the links in [stack used](#stack-used)_
 
 Install the Phoenix project generator [phx.new](https://hexdocs.pm/phoenix/Mix.Tasks.Phx.New.html) (if you don’t already have it installed) by running:
+
 ```
 mix archive.install hex phx_new 1.6.12
 ```
 
 Generate a new Phoenix project with (we don't need the mailer and the internationalization)
+
 ```
 mix phx.new --no-gettext --no-mailer probuild_ex
 ```
@@ -224,6 +216,7 @@ end
 The `pro_list/0` function above in the module will do a `GET` request to the UGG endpoint then pass the body to [Jason](https://github.com/michalmuskala/jason) to convert this JSON result to an elixir representation.
 
 Let's test our module from IEx (Elixir's interactive shell)
+
 ```shell
 iex -S mix phx.server
 iex> ProbuildEx.UGG.pro_list()
@@ -249,17 +242,17 @@ iex> ProbuildEx.UGG.pro_list()
   ...
 ]
 ```
-Looks nice we got our list of pro player in elixir.
 
+Looks nice we got our list of pro player in elixir.
 
 ### Fetch riot data from their api - [commit](https://github.com/mrdotb/probuild_ex/commit/415040b60d6d304ade88ddb0309554f90fa62c0d)
 
 You will need a league of [league of legends](https://www.leagueoflegends.com/) account to get a riot token from their [dashboard](https://developer.riotgames.com/).
 
-
-<SingleLightbox src={_3_developer_riotgames} alt="riot game developer get token" />
-
-
+<SingleLightbox
+  src={_3_developer_riotgames}
+  alt="riot game developer get token"
+/>
 
 We will put the token in a local dev config. It's good practice to ignore tokens from git.
 
@@ -271,6 +264,7 @@ Edit file `.gitignore`
 ```
 
 Edit file `config/dev.exs` add to the bottom
+
 ```elixir
 if File.exists?(Path.expand("dev.local.exs", __DIR__)) do
   import_config "dev.local.exs"
@@ -278,10 +272,11 @@ end
 ```
 
 Create file `config/dev.local.exs`
+
 ```elixir
 import Config
 
-# put your token below 
+# put your token below
 config :probuild_ex, ProbuildEx.RiotApi, token: "RGAPI-xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
 ```
 
@@ -498,12 +493,14 @@ A tesla middleware is an extra step before / after the request to modify it.
 The api is rate limited and return 429 and sometimes 503 the Retry middleware will retry automatically, the others middleware are self explanatory.
 
 We implemented the four calls needed to the [riot api](https://developer.riotgames.com/apis):
+
 - `GET /lol/match/v5/matches/by-puuid/:puuid/ids`
 - `GET /lol/match/v5/matches/:match_id`
 - `GET /lol/summoner/v4/summoners/by-name/:name`
 - `GET /lol/summoner/v4/summoners/by-puuid/:puuid`
 
 Let's test our module from IEx
+
 ```shell
 iex -S mix phx.server
 iex> client_euw1 = ProbuildEx.RiotApi.new("euw1")
@@ -524,9 +521,8 @@ iex> client_europe = ProbuildEx.RiotApi.new("europe")
 iex> ProbuildEx.RiotApi.list_matches(client_europe, summoner["puuid"])
 ["EUW1_6077658796", "EUW1_6007773996",  ...]
 ```
+
 Looks nice we get the summoner for a name then we list his matches.
-
-
 
 ### Migrations & schemas - [commit](https://github.com/mrdotb/probuild_ex/commit/423fd0aa116db03456a3c49363b413c2a567ba60)
 
@@ -570,24 +566,27 @@ We will need to tweak a bit the generated schemas and migrations.
 I like to disallow `NULL` value in my database unless it's needed which is not the default with [ecto](https://hexdocs.pm/phoenix/ecto.html).
 We will also set the `on_delete:` to `:delete_all` for delete to Cascade properly.
 
-*Replace XXXXXXXX with the timestamp*
+_Replace XXXXXXXX with the timestamp_
 
 #### Edit `migrations/XXXXXXXXXX_create_teams.exs`
+
 ```elixir
 add :name, :string, null: false
 ```
+
 We set `:name` non `NULL`.
 
-
 #### Edit `migration/XXXXXXXXX_create_pros.exs`
+
 ```elixir
 add :name, :text, null: false
 add :team_id, references(:teams, on_delete: :delete_all), null: false
 ```
+
 We set attributes non `NULL` and add a `on_delete:` `:delete_all` to properly Cascade the delete.
 
-
 #### Edit `lib/probuild_ex/games/pro.ex`
+
 ```elixir
 defmodule ProbuildEx.Games.Pro do
   use Ecto.Schema
@@ -612,10 +611,11 @@ defmodule ProbuildEx.Games.Pro do
   end
 end
 ```
+
 We add `belongs_to` to `Team` and add some contraint check in the [changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html).
 
-
 #### Edit `migration/XXXXXXXXX_create_summoners.exs`
+
 ```elixir
 defmodule ProbuildEx.Repo.Migrations.CreateSummoners do
   use Ecto.Migration
@@ -636,10 +636,11 @@ defmodule ProbuildEx.Repo.Migrations.CreateSummoners do
   end
 end
 ```
+
 We set attributes non `NULL` and the `:on_delete` like before. We also create a unique index using the `puuid` and `platform_id` to prevent duplicate. (I encounter a case where two summoners got the same puuid in different region)
 
-
 #### Edit `lib/probuild_ex/games/summoner.ex`
+
 ```elixir
 defmodule ProbuildEx.Games.Summoner do
   use Ecto.Schema
@@ -667,10 +668,11 @@ defmodule ProbuildEx.Games.Summoner do
   end
 end
 ```
+
 Same as before we add a `belongs_to` and add constraint check in the changeset.
 
-
 #### Edit `migration/XXXXXXXXX_create_games.exs`
+
 ```elixir
 add :creation, :utc_datetime, null: false
 add :duration, :integer, null: false
@@ -679,10 +681,11 @@ add :riot_id, :string, null: false
 add :version, :text, null: false
 add :winner, :smallint, null: false
 ```
+
 Same as before we disallow `NULL`
 
-
 #### Edit `lib/probuild_ex/games/summoner.ex`
+
 ```elixir
 defmodule ProbuildEx.Games.Game do
   use Ecto.Schema
@@ -712,8 +715,8 @@ defmodule ProbuildEx.Games.Game do
   end
 end
 ```
-We add `has_many` `Participant`.
 
+We add `has_many` `Participant`.
 
 #### Edit `migration/XXXXXXXXX_create_participants.exs`
 
@@ -747,10 +750,11 @@ defmodule ProbuildEx.Repo.Migrations.CreateParticipants do
   end
 end
 ```
+
 We set attributes non `NULL` and the `:on_delete` like before.
 
-
 #### Edit `lib/probuild_ex/games/participant.ex`
+
 ```elixir
 defmodule ProbuildEx.Games.Participant do
   use Ecto.Schema
@@ -819,10 +823,13 @@ defmodule ProbuildEx.Games.Participant do
   end
 end
 ```
+
 We add `belongs_to` and `foreign_key_constraint`.
 
 #### Running migrations
+
 All our migrations are ready let's run them.
+
 ```elixir
 mix ecto.migrate
 ```
@@ -836,6 +843,3 @@ In the next part we will focus on collecting the Pros and Games data with GenSer
 Be sure to sign up to the newsletter so that you won't miss the next Part. Feel free to leave comments or feedback. I also appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
 
 See you soon !
-
-
-

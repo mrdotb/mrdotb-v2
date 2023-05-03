@@ -6,7 +6,12 @@ import { Popover, Transition } from '@headlessui/react'
 import clsx from 'clsx'
 
 import { Container } from '@/components/Container'
-import { MoonIcon, SunIcon, ChevronDownIcon, CloseIcon } from '@/components/Icons'
+import {
+  MoonIcon,
+  SunIcon,
+  ChevronDownIcon,
+  CloseIcon,
+} from '@/components/Icons'
 import avatarImage from '@/images/avatar.jpg'
 
 function MobileNavItem({ href, children }) {
@@ -312,7 +317,7 @@ export function Header() {
                 style={{ position: 'var(--header-inner-position)' }}
               >
                 <div className="relative">
-                 <AvatarContainer
+                  <AvatarContainer
                     className="absolute left-0 top-3 origin-left transition-opacity"
                     style={{
                       opacity: 'var(--avatar-border-opacity, 0)',

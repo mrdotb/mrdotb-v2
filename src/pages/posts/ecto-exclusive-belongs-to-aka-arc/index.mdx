@@ -8,12 +8,10 @@ export const meta = {
   date: '2022-01-16',
   title: 'Exclusive Belongs To Association in Phoenix using Ecto',
   tags: ['elixir', 'ecto', 'database'],
-  description:
-    'How to create a exclusive belongs to aka arc in ecto',
+  description: 'How to create a exclusive belongs to aka arc in ecto',
 }
 
 export default (props) => <PostLayout meta={meta} {...props} />
-
 
 Recently, I was tasked with implementing an exclusive "belongs-to" relationship in a Phoenix web application. I came across an intriguing blog post on the subject, but it used ActiveRecord, so I had to adapt it to work with Ecto. To help others who may face a similar challenge, I have documented my process and the solution I arrived at.
 
@@ -23,7 +21,10 @@ The original article from hashrocket [exclusive-belongs-to-aka-exclusive-arc-](h
 
 ## Diagram
 
-<SingleLightbox src={diagram} alt="diagram exclusive belongs to with datagrip" />
+<SingleLightbox
+  src={diagram}
+  alt="diagram exclusive belongs to with datagrip"
+/>
 
 ## Migration
 

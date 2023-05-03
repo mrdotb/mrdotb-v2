@@ -3,20 +3,15 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-07-19',
   title: 'Empty system $ENV elixir',
   tags: ['elixir', 'erlang', 'til'],
-  description:
-    'Empty the $ENV when calling external process'
+  description: 'Empty the $ENV when calling external process',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 By default when you start an external process the current system env is passed.
 
@@ -28,5 +23,3 @@ You can clean it using the following code.
 |> Enum.map(&List.first(&1))
 |> Enum.each(&(:os.unsetenv(&1)))
 ```
-
-

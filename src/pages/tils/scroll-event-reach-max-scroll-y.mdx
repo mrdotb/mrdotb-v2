@@ -3,27 +3,22 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-05-07',
   title: 'Scroll event reach max scroll Y',
   tags: ['javascript', 'til'],
-  description:
-    'JS when we reach the end of the Y scroll'
+  description: 'JS when we reach the end of the Y scroll',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 Usefull to know when we reach the end of scroll.
 
 ```javascript
 const $box = document.querySelector('scroll-element')
 
-$box.addEventListener('scroll', event => {
+$box.addEventListener('scroll', (event) => {
   const target = event.target
 
   const maxScrollY = target.scrollHeight - target.clientHeight
@@ -32,8 +27,4 @@ $box.addEventListener('scroll', event => {
     // We reach the maximum of scroll Y
   }
 })
-
 ```
-
-
-

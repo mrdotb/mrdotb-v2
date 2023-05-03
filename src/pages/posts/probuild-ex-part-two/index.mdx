@@ -6,22 +6,27 @@ import _1_canon_diagram from './1-canon-diagram.png'
 import _cover from './cover.png'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2022-10-03',
   title: 'Probuild Ex Part two',
-  tags: ['elixir', 'ecto', 'multi', 'GenServer', 'Stream', 'phoenix', 'tutorial', 'riot api'],
-  description:
-    'A league of legend probuilds with elixir phoenix, part two'
+  tags: [
+    'elixir',
+    'ecto',
+    'multi',
+    'GenServer',
+    'Stream',
+    'phoenix',
+    'tutorial',
+    'riot api',
+  ],
+  description: 'A league of legend probuilds with elixir phoenix, part two',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-In [Part one](/posts/probuild-ex-part-one/) we created our HTTP clients and model our data. 
+In [Part one](/posts/probuild-ex-part-one/) we created our HTTP clients and model our data.
 In this second part, we are going to organize the data collection and creation through modules and processes.
 Part two assumes that you have already gone through Part one and have the code at a point where we can jump right in. If you want to checkout the companion code and fast forward to this point, do the following:
 
@@ -31,20 +36,17 @@ cd probuild_ex
 git checkout 423fd0aa116db03456a3c49363b413c2a567ba60
 ```
 
-
 ## Table of contents
 
 ## Have a peak 👀 at the end of series application
+
 https://probuild.fly.dev/
 
 ## Modules Diagram
 
 Here is a diagram of what we are going to do.
 
-
 <SingleLightbox src={_1_canon_diagram} alt="Canons diagram mrdotb" />
-
-
 
 - `Games` a context module holding the functions to query and insert data in postgres.
 - `Canon` a set of 3 modules:
@@ -54,14 +56,14 @@ Here is a diagram of what we are going to do.
 - `UGG` is a HTTP client done in part one.
 - `RiotApi` is a HTTP client done in part one.
 
-
 ## Games context first part and canon Pros - [commit](https://github.com/mrdotb/probuild_ex/commit/89b2a921c72e0e7e556a7f8751ab6308e8c835e3)
-We are going to create the `Games` context with functions to fetch and create the `team`, `pro` and `summoner`.
 
+We are going to create the `Games` context with functions to fetch and create the `team`, `pro` and `summoner`.
 
 ### Games context
 
 Create a new file `lib/probuild_ex/games.ex`
+
 ```elixir
 defmodule ProbuildEx.Games do
   @moduledoc """
@@ -223,22 +225,22 @@ Our `Games` module have many functions let's explain a bit.
 
 The `create_pro_complete/2` function takes for parameter a ugg_pro and his summoner_data from riot_api.
 The work will be done inside a [database transaction](https://en.wikipedia.org/wiki/Database_transaction):
+
 - it will create or fetch the team of this pro player
 - it will create or fetch the pro player
 - it will update or create the summoner, summoner get a different treatment because they can change. (name change, get attached to a pro player)
-If something go wrong the transaction is discarded and nothing is created / updated otherwise we return a map with the keys `:team`, `:pro`, `:summoner`.
+  If something go wrong the transaction is discarded and nothing is created / updated otherwise we return a map with the keys `:team`, `:pro`, `:summoner`.
 
 The `fetch_summoner/1` function take for parameters an options keyword to perform a search on the summoners. We are using the [ecto query composition](https://elixirschool.com/blog/ecto-query-composition) method.
-
 
 ### Games context fixtures and tests
 
 Now, we will test the function in our `Games` module. For this purpose we will create a test fixtures and a test file.
 
-*A test fixture is a fixed state of a set of objects used as a baseline for running tests. The purpose of a test fixture is to ensure that there is a well known and fixed environment in which tests are run so that results are repeatable.*
-
+_A test fixture is a fixed state of a set of objects used as a baseline for running tests. The purpose of a test fixture is to ensure that there is a well known and fixed environment in which tests are run so that results are repeatable._
 
 Let's create our fixtures, create a folder `mkdir test/support/fixtures` then a new file `test/support/fixtures/games_fixtures.ex`
+
 ```elixir
 defmodule ProbuildEx.GamesFixtures do
   @moduledoc """
@@ -307,6 +309,7 @@ end
 ```
 
 Create a new file `test/probuild_ex/games_test.ex`
+
 ```elixir
 defmodule ProbuildEx.GamesTest do
   use ExUnit.Case, async: true
@@ -404,16 +407,19 @@ Team, pro and summoner test are self explanatory. We ensure it behave as expecte
 To test of our main function `create_pro_complete/2` I choose to pull some real data instead of fixture this way it's easier to understand how it will behave with real data. We call the function and check the returned map and compare it to the provided data.
 
 Let's run our tests.
+
 ```shell
 mix test
 Finished in 0.09 seconds (0.08s async, 0.01s sync)
 8 tests, 0 failures
 ```
+
 Success !
 
 ### Canon Pros
 
 Create a new file `lib/probuild_ex/canon/pros.ex`
+
 ```elixir
 defmodule ProbuildEx.Canon.Pros do
   @moduledoc """
@@ -492,6 +498,7 @@ Canon Pros is a good opportunity to use elixir [Stream](https://hexdocs.pm/elixi
 We want the pipeline to be done sequentially because at some point we will exhaust our riot api quota and we will have to wait.
 
 Consider the following code. Try it in iex.
+
 ```elixir
 (1..5
 |> Enum.map(fn n ->
@@ -515,7 +522,7 @@ Insert 4 in db
 Insert 5 in db
 ```
 
-*We use `:timer.sleep()` to simulate a HTTP request*
+_We use `:timer.sleep()` to simulate a HTTP request_
 
 As you can see using `Enum` we need to do all our requests before going to the inserts.
 
@@ -548,15 +555,17 @@ Insert 5 in db
 You can see that we have the actions are done sequentially `[request] -> [insert] -> [request] ...`
 
 Going back to our `Canon.Pros` we get the UGG pro_list then sequentially:
+
 - filter pro based on the platform_id we intrested in
 - filter if summoner already exist in DB
 - Request riot API for the summoner
 - filter if summoner does not exist in riot API
 - Create the pro, his team, his summoner or attach him to existing data if the pro or his team already exist
 
-Refresh your riot token from their [dashboard](https://developer.riotgames.com/) and put it on `config/dev.local.exs`. *Dev token only last 24 hours* like we did in part one.
+Refresh your riot token from their [dashboard](https://developer.riotgames.com/) and put it on `config/dev.local.exs`. _Dev token only last 24 hours_ like we did in part one.
 
 Now it's time to run our `Canon.Pros` and start collecting pros. You can put one of the `platflorm_id` from this list `["euw1", "jp1", "kr", "na1", "br1"]`
+
 ```elixir
 ProbuildEx.Canon.Pros.run("kr")
 ```
@@ -565,12 +574,12 @@ Now you should see a mix of HTTP logs from tesla and sql queries and inserts. At
 
 And that's all for `Canon.Pros`! It will take some time to complete depending on the region you choose. But since we do everything in transaction it's safe to kill it anytime and restart it later!
 
-
 ## Games context second part and canon Games - [commit](https://github.com/mrdotb/probuild_ex/commit/e07c1ac64a51a5db9897330648e595437ae5a27d)
 
 ### Edit game schema and changeset
 
 Open `lib/probuild_ex/games/game.ex`
+
 ```elixir
 defmodule ProbuildEx.Games.Game do
   use Ecto.Schema
@@ -648,12 +657,12 @@ We also want to simplify the `version` provided by the riot api. It will help la
 
 ex: "12.1.416.4011" should become "12.1.1"
 
-
 ### Games context part two
 
 We are going to add function to the `Games` context to list, create and query `game`, `summoner`, `participant`.
 
 Edit file `lib/probuild_ex/games.ex`
+
 ```elixir
 defmodule ProbuildEx.Games do
   ...
@@ -861,6 +870,7 @@ Let's discuss the function we added to `Games` context.
 `create_game_complete/3` parameters are `platform_id`, `match_data` and a list of `summoner` or `summoner_data`. It's a big transaction where we create the game the summoners and the participants. Because it's a lot of line of code I choose to use [`Ecto.Multi`](https://hexdocs.pm/ecto/Ecto.Multi.html) which is a data structure to organize transaction (check the [doc](https://hexdocs.pm/ecto/Ecto.Multi.html) to learn more about Multi).
 
 Let's recap in order what is happening inside this transaction:
+
 - Create the game and put it to the multi as `:game`
 - Loop over `summoners_list` two cases:
   - The summoner already exist on our database in this case we just put it to the multi on key `{:summoner, summoner_puuid}`
@@ -873,7 +883,6 @@ Let's recap in order what is happening inside this transaction:
   - We can't find the opponent_participant in this case we put an `error` in the changeset and the transaction will fail
   - We can find the opponent_participant in this case we will set the `opponent_participant_id` to the `opponent_id`
 - We run our `multi` in `Repo.transaction` if there is no errors all the data will get inserted!
-
 
 ### Games context fixtures and tests
 
@@ -2398,6 +2407,7 @@ end
 ```
 
 Edit `test/probuild_ex/games_test.exs`
+
 ```elixir
 defmodule ProbuildEx.GamesTest do
   use ExUnit.Case, async: true
@@ -2479,14 +2489,14 @@ We added a test for `list_pro_summoners/1` make sure it behave properly.
 We added tests for the `game` schema and `Game.changeset/2` about the `version` and `creation_int` that we discussed earlier.
 
 Last we test our `create_game_complete/3`. We pass it the real data fixture we setup erlier in `GameDataFixtures`.
-We check the returned `Multi`  we should get a `Game`, 10 `summoner` and 10 `participants`.
-
+We check the returned `Multi` we should get a `Game`, 10 `summoner` and 10 `participants`.
 
 ### Canon Games
 
 With our `Games` context ready it's time to write `Canon.Games`.
 
 Create a new file `lib/probuild_ex/canon/games`
+
 ```elixir
 defmodule ProbuildEx.Canon.Games do
   @moduledoc """
@@ -2601,17 +2611,19 @@ Like for `Canon.Pros` we are using [Stream](https://hexdocs.pm/elixir/Stream.htm
 We start by creating two riot clients for v4 endpoints and v5 endpoints refer to [part one](/posts/probuild-ex-part-one/#fetch-riot-data-from-their-api---commithttpsgithubcommrdotbprobuild_excommit415040b60d6d304ade88ddb0309554f90fa62c0d) if you forget why we need two clients.
 
 We list the pro summoners on our database then sequentially:
+
 - List his matches on the riot api
 - Reject the matches that already exist in our database
 - Flatten the result then iterate over the match_id
 - Try to fetch the match on riot api two cases:
   - Could not find match go to next match
-  - Find match try to fetch the summoners on database or riot api two cases: 
+  - Find match try to fetch the summoners on database or riot api two cases:
     - Could not find one of the summoners on riot api go to next match
     - Success we find the 10 summoners
 - Try to create the `match`, `summoners`, `participants`
 
-Let's run our `Canon.Games` in `iex -S mix` and start collecting games. You can put one of the `platflorm_id` from list `["euw1", "jp1", "kr", "na1", "br1"]`. *You need to have some pro summoners in database by running the `Canon.Pros` like we did before*
+Let's run our `Canon.Games` in `iex -S mix` and start collecting games. You can put one of the `platflorm_id` from list `["euw1", "jp1", "kr", "na1", "br1"]`. _You need to have some pro summoners in database by running the `Canon.Pros` like we did before_
+
 ```elixir
 ProbuildEx.Canon.Games.run("kr")
 ```
@@ -2626,7 +2638,7 @@ Now we have our `Canon.Pros` and `Canon.Games` we want them to be run in a cron 
 
 We will use a [GenServer](https://hexdocs.pm/elixir/1.12/GenServer.html).
 
-*A GenServer is a process like any other Elixir process and it can be used to keep state, execute code asynchronously and so on.*
+_A GenServer is a process like any other Elixir process and it can be used to keep state, execute code asynchronously and so on._
 
 ```elixir
 defmodule ProbuildEx.Canon.Cron do
@@ -2680,6 +2692,7 @@ end
 Let's go slowly. First, we make use of the `restart: :transient` option to be able to stop our GenServer under `:normal` condition.
 
 Let's break what happens:
+
 - `start_link/1` function receive the `delay` which is how many millisecond should we wait before running the next canon and mfa which stands for Module Function Args ex: `{ProbuildEx.Canon.Pros, :run, ["kr"]}`. The third argument is the current number of completed canon it start at `0`.
 - `init/1` is triggered by `start_link` it receive the args from it `{delay, mfa, num}` at the end it send a `:schedule_next_run`
 - `handle_continue/2` `:schedule_next_run` is triggered two cases:
@@ -2692,6 +2705,7 @@ Let's break what happens:
   - Send a `:schedule_next_run`
 
 Let's run `Canon.Pros` through `Canon.Cron` in `iex -S mix` with 5 seconds delay.
+
 ```elixir
 {:ok, pid} = ProbuildEx.Canon.Cron.start_link({5_000, {ProbuildEx.Canon.Pros, :run, ["kr"]}})
 ...
@@ -2699,6 +2713,7 @@ Let's run `Canon.Pros` through `Canon.Cron` in `iex -S mix` with 5 seconds delay
 ...
 [info] Canon Elixir.ProbuildEx.Canon.Pros kr num 1 finished in 190 ms
 ```
+
 Since I run run `Canon.Pros` on `"kr"` previously it complete fast, then wait 5 seconds before running it again and again.
 
 ## Supervisor and application configs - [commit](https://github.com/mrdotb/probuild_ex/commit/9f3016f5992de0ad3bd8d90636f1d8ff25fd8508)
@@ -2710,6 +2725,7 @@ Perfect in elixir we have [`Supervisor`](https://hexdocs.pm/elixir/1.12/Supervis
 First we will setup a config for our `Canons`.
 
 Edit `config/config.exs`
+
 ```elixir
 config :probuild_ex, :canon,
   games: [platform_ids: ["euw1", "jp1", "kr", "na1", "br1"], delay: 10_000],
@@ -2719,6 +2735,7 @@ config :probuild_ex, :canon,
 We will run 5 `Canon.Games` waiting 10 seconds between completion and 5 `Canon.Pros` waiting 24 hours between completion.
 
 Edit `config/test.exs`
+
 ```elixir
 # Disable canon during tests
 config :probuild_ex, :canon,
@@ -2729,6 +2746,7 @@ config :probuild_ex, :canon,
 We don't want to run the canons during the tests.
 
 Create file `lib/probuild_ex/canon/supervisor.ex`
+
 ```elixir
 defmodule ProbuildEx.Canon.Supervisor do
   @moduledoc false
@@ -2768,7 +2786,8 @@ defmodule ProbuildEx.Canon.Supervisor do
 end
 ```
 
-We created our Canon supervisor it will get info from the config we did before and prepare a list of children filled with our `Canon.Cron` configured to run our `Games` and `Pros` canons.  The children list will be something like that.
+We created our Canon supervisor it will get info from the config we did before and prepare a list of children filled with our `Canon.Cron` configured to run our `Games` and `Pros` canons. The children list will be something like that.
+
 ```elixir
 [
   %{
@@ -2805,6 +2824,7 @@ The strategy used is `:one_for_one` which mean it will replace the canon that er
 Now we want our supervisor be started when we launch the application.
 
 Edit `lib/probuild_ex/application.ex`
+
 ```elixir
 defmodule ProbuildEx.Application do
   # See https://hexdocs.pm/elixir/Application.html
@@ -2853,9 +2873,10 @@ Now run `iex -S mix` you should see so much logs from http and sql logs that you
 Let's kill that and disable some logs using our local dev config.
 
 Edit `config/dev.local.exs`
+
 ```elixir
 # since tesla and ecto_sql are deps don't forget to recompile them if you want to turn on / off their logs
-# mix deps.compile --force tesla ecto_sql 
+# mix deps.compile --force tesla ecto_sql
 config :logger,
   backends: [:console],
   compile_time_purge_matching: [
@@ -2867,11 +2888,13 @@ config :logger,
 
 Using the `:compile_time_purge_matching` we disable the sql and http logs and the logs and also the log from the `Canon.Games` module this way we will see our others logs better.
 Because `tesla` and `ecto_sql` are deps we need to recompile them turn on / off their logs.
+
 ```elixir
-mix deps.compile --force tesla ecto_sql 
+mix deps.compile --force tesla ecto_sql
 ```
 
 Now let's run our app again
+
 ```elixir
 iex -S mix
 Generated probuild_ex app
@@ -2897,6 +2920,7 @@ Easy to read as you can see the `Canon.Pros` complete very fast since I run them
 The first `Canon.Games` will take a lot of time to complete and it will get faster when we start to get a lot of summoners. Pro players play at high level and at this level it's often the same players.
 
 Last thing let's ensure it restart by killing a random `Canon` in `iex -S mix` and check if the PID change
+
 ```elixir
 Supervisor.which_children(ProbuildEx.Canon.Supervisor)
 [
@@ -2935,9 +2959,10 @@ We use `Supervisor.which_children/1` to get the list of children. We then pick a
 Well done and thanks for sticking with me to the end! This is probably the longest and most challenging part in the series, especially if you are new to elixir.
 
 We covered a lot of things that you can do with elixir and ecto:
+
 - Transactions through `Ecto.Multi` and `Repo.transaction`
 - `Stream` to build a sequential pipeline
-- `GenServer` to run jobs infinitely 
+- `GenServer` to run jobs infinitely
 - `Supervisor` to ensure our process get restarted if an unknow error happen
 
 In the next part we will begin the creation of a styled dashboard with liveview to display our data.
@@ -2945,6 +2970,3 @@ In the next part we will begin the creation of a styled dashboard with liveview 
 Be sure to sign up to the newsletter so that you won't miss the next Part. Feel free to leave comments or feedback. I also appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
 
 See you soon !
-
-
-

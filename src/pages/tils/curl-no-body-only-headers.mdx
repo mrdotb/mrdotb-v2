@@ -3,22 +3,18 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-07-19',
   title: 'curl no body only headers',
   tags: ['curl', 'shell', 'til'],
-  description:
-    'Empty the $ENV when calling external process'
+  description: 'Empty the $ENV when calling external process',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
 Sometimes you just want to check the headers the `-I` option is what you are looking for.
+
 ```shell
 curl -Is http://ipinfo.io
 > HTTP/1.1 200 OK
@@ -40,5 +36,3 @@ curl -Is http://ipinfo.io
 #Silent or quiet mode.
 -s, --silent
 ```
-
-

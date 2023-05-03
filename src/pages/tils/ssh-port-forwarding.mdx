@@ -3,20 +3,15 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-11-13',
   title: 'ssh port forwarding',
   tags: ['shell', 'network', 'til'],
-  description:
-    'How to forward ssh port'
+  description: 'How to forward ssh port',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 ## Make a local port accessible from a remote server.
 
@@ -53,5 +48,3 @@ ssh -L 4000:localhost:8080 user@34.80.255.217
 ### Tips
 
 Adding the flag `-nNT` will not open a shell on the remote server.
-
-

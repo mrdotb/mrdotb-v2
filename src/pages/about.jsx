@@ -4,11 +4,7 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 import { Container } from '@/components/Container'
-import {
-  GitHubIcon,
-  LinkedInIcon,
-  TwitterIcon,
-} from '@/components/SocialIcons'
+import { GitHubIcon, LinkedInIcon, TwitterIcon } from '@/components/SocialIcons'
 import { MailIcon } from '@/components/Icons'
 
 import portraitImage from '@/images/portrait.jpg'
@@ -53,36 +49,54 @@ export default function About() {
             <h1 className="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
               I’m Baptiste Chaleil. I work and live in Paris.
             </h1>
-            <div className="mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400 prose">
+            <div className="prose mt-6 space-y-7 text-base text-zinc-600 dark:text-zinc-400">
               <p>
-                I enjoy exploring the world through travel or
-                tinkering with my <a href="https://github.com/mrdotb/dotfiles">~dotfiles</a> to
+                I enjoy exploring the world through travel or tinkering with my{' '}
+                <a href="https://github.com/mrdotb/dotfiles">~dotfiles</a> to
                 enhance my workflow.
               </p>
               <p>
-                I have extensive experience with the <a href="https://www.phoenixframework.org/">Phoenix Framework</a> and <a href="http://absinthe-graphql.org/">Absinthe</a> the
-                GraphQL toolkit for Elixir.
-                My professional background includes working as the main backend
-                developer for a cashier SaaS app  at <a href="https://www.evoluflor.fr/">evoluflor</a> and being responsible for infrastructure and various projects at <a href="https://pandascore.co">PandaScore</a>, where I collaborated closely with the CTO.
+                I have extensive experience with the{' '}
+                <a href="https://www.phoenixframework.org/">
+                  Phoenix Framework
+                </a>{' '}
+                and <a href="http://absinthe-graphql.org/">Absinthe</a> the
+                GraphQL toolkit for Elixir. My professional background includes
+                working as the main backend developer for a cashier SaaS app at{' '}
+                <a href="https://www.evoluflor.fr/">evoluflor</a> and being
+                responsible for infrastructure and various projects at{' '}
+                <a href="https://pandascore.co">PandaScore</a>, where I
+                collaborated closely with the CTO.
               </p>
               <p>
-                In terms of project management, I employ Agile methodologies
-                and use tools like Asana and Notion for organizing tasks and
-                writing specifications.
+                In terms of project management, I employ Agile methodologies and
+                use tools like Asana and Notion for organizing tasks and writing
+                specifications.
               </p>
               <p>
                 In addition to my Elixir expertise, I am well-versed in
                 JavaScript, Node.js, and the React framework. I stay up-to-date
-                with industry trends and news by frequenting Hacker News regularly.
+                with industry trends and news by frequenting Hacker News
+                regularly.
               </p>
               <p>
-                As a part of the Elixir community, I regularly attend <a href="https://www.meetup.com/fr-FR/elixir/">Paris.ex</a> meetups and have even been featured on an <a href="https://topenddevs.com/podcasts/elixir-mix/episodes/creating-league-of-legends-probuild-with-baptiste-chaleil-emx-207">elixir podcast</a> discussing an elixir tutorial series I wrote.
+                As a part of the Elixir community, I regularly attend{' '}
+                <a href="https://www.meetup.com/fr-FR/elixir/">Paris.ex</a>{' '}
+                meetups and have even been featured on an{' '}
+                <a href="https://topenddevs.com/podcasts/elixir-mix/episodes/creating-league-of-legends-probuild-with-baptiste-chaleil-emx-207">
+                  elixir podcast
+                </a>{' '}
+                discussing an elixir tutorial series I wrote.
               </p>
               <p>
-                You can find my open-source projects on GitHub, and I occasionally answer questions on the Elixir Slack.
+                You can find my open-source projects on GitHub, and I
+                occasionally answer questions on the Elixir Slack.
               </p>
               <p>
-                For my development environment, I use <a href="https://i3wm.org/">i3</a> or <a href="https://pop.system76.com/">Pop!_OS</a>, while docker is my go-to choice for server deployments.
+                For my development environment, I use{' '}
+                <a href="https://i3wm.org/">i3</a> or{' '}
+                <a href="https://pop.system76.com/">Pop!_OS</a>, while docker is
+                my go-to choice for server deployments.
               </p>
             </div>
           </div>
@@ -91,7 +105,11 @@ export default function About() {
               <SocialLink href="https://twitter.com/mrdotB" icon={TwitterIcon}>
                 Follow on Twitter
               </SocialLink>
-              <SocialLink href="https://github.com/mrdotb" icon={GitHubIcon} className="mt-4">
+              <SocialLink
+                href="https://github.com/mrdotb"
+                icon={GitHubIcon}
+                className="mt-4"
+              >
                 Follow on GitHub
               </SocialLink>
               <SocialLink

@@ -15,7 +15,8 @@ export async function generateRssFeed() {
 
   let feed = new Feed({
     title: author.name,
-    description: 'I share my knowledge about the world of elixir and other topics. From succinct post to extensive series, organized chronologically.',
+    description:
+      'I share my knowledge about the world of elixir and other topics. From succinct post to extensive series, organized chronologically.',
     author,
     id: siteUrl,
     link: siteUrl,

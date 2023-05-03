@@ -4,32 +4,29 @@ import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 import _cover from './cover.jpg'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2023-01-31',
   title: 'Nvim Format Sql',
   tags: ['til', 'nvim', 'sql'],
-  description:
-    'Format sql in nvim using range and pgFormatter cli'
+  description: 'Format sql in nvim using range and pgFormatter cli',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 I was looking for a way to format my sql in nvim directly.
 
 I found a nice cli called [pgFormatter](https://github.com/darold/pgFormatter)
 
 On mac you can install it with [brew](https://formulae.brew.sh/formula/pgformatter)
+
 ```shell
 brew install pgformatter
 ```
 
 In my case I use a linux distrib based on [ubuntu](https://ubuntu.com/)
+
 ```shell
 sudo apt-get install libcgi-pm-perl
 cd /tmp
@@ -42,6 +39,7 @@ make && sudo make install
 ```
 
 After that you can use a [range](https://vim.fandom.com/wiki/Ranges) and called the external cli `pg_format` with `!`
+
 ```shell
 # called pg_format on the current line
 :.!pg_format
@@ -51,7 +49,5 @@ After that you can use a [range](https://vim.fandom.com/wiki/Ranges) and called 
 ```
 
 In action
+
 <YouTube videoId="mvQeEaK7j_g" />
-
-
-

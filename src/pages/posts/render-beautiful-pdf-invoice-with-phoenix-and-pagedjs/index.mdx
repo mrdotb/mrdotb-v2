@@ -8,7 +8,6 @@ import _4_screenshot_page from './4-screenshot-page.png'
 import _cover from './cover.webp'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2022-03-25',
@@ -16,12 +15,10 @@ export const meta = {
   tags: ['elixir', 'phoenix', 'pagedjs', 'pdf'],
   cover: _cover,
   description:
-    'How to render a beautiful paginated pdf invoice with phoenix and pagedjs'
+    'How to render a beautiful paginated pdf invoice with phoenix and pagedjs',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
 
 In this blog post, using [phoenix](https://www.phoenixframework.org/) and [pagedjs](https://pagedjs.org/) we are going to render invoice in pdf format.
 
@@ -347,29 +344,33 @@ Create the file `assets/js/pdf.js`
 ```javascript
 // We import the CSS which is extracted to its own file by esbuild.
 // Remove this line if you add a your own CSS build pipeline (e.g postcss).
-import "../css/pdf.css"
+import '../css/pdf.css'
 
 // Adapt the import if you use npm
-import {Previewer} from '../vendor/paged.js';
+import { Previewer } from '../vendor/paged.js'
 
-const previewer = new Previewer();
-const html = document.querySelector('#root').innerHTML;
-const $preview = document.querySelector('#preview');
+const previewer = new Previewer()
+const html = document.querySelector('#root').innerHTML
+const $preview = document.querySelector('#preview')
 
 // pagedjs will take the content we put in #root html variable
 // and will paginate it nicely in a4 format if it does not fit in one page
 // we can get a preview in html format and put it in the dom node $preview variable
-previewer.preview(html, ['/assets/pdf.css'], $preview);
+previewer.preview(html, ['/assets/pdf.css'], $preview)
 
 // add a click event on print button to ... print
-document.querySelector('.button-print').addEventListener('click', _e => window.print())
-
+document
+  .querySelector('.button-print')
+  .addEventListener('click', (_e) => window.print())
 ```
 
 Create the file `assets/css/pdf.css`
+
 ```css
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   background: #f6f8f9;
   padding: 0;
   margin: 0;
@@ -380,7 +381,7 @@ body {
 
   @bottom-right {
     /* format the page number */
-    content: "Page " counter(page) " of " counter(pages);
+    content: 'Page ' counter(page) ' of ' counter(pages);
     font-size: 9px;
     color: #606d78;
   }
@@ -533,7 +534,7 @@ main {
   /* We need to set this property otherwise the backgroundColor dissapear on pdf more info on the link below
    * https://stackoverflow.com/questions/14987496/background-color-not-showing-in-print-preview
    * */
-  -webkit-print-color-adjust: exact; 
+  -webkit-print-color-adjust: exact;
   background-size: contain;
   background-repeat: no-repeat;
   width: 200px;
@@ -545,7 +546,7 @@ main {
   /* We need to set this property otherwise the backgroundColor dissapear on pdf more info on the link below
    * https://stackoverflow.com/questions/14987496/background-color-not-showing-in-print-preview
    * */
-  -webkit-print-color-adjust: exact; 
+  -webkit-print-color-adjust: exact;
 }
 
 .table {
@@ -557,9 +558,7 @@ main {
 .table td {
   padding: 1rem;
 }
-
 ```
-
 
 Let's add `pdf.js` to our esbuild config. I also upgraded the target to `es2021` pagedjs does not work if the target is less that `es2018`
 
@@ -621,6 +620,7 @@ We simply list all the `@invoices` and generate link to them.
   <%= link(invoice.number, to: Routes.invoice_path(@conn, :show, invoice.id)) %>
 <% end %>
 ```
+
 Create a file `lib/billing_web/templates/invoice/show.html.heex` leave it empty we will come back on it.
 
 ```elixir
@@ -663,12 +663,9 @@ After this point you should be able to go to `/invoices` and see our list of inv
 
 <Image src={_3_screenshot_page} alt="What it should look like" />
 
-
-
 You can click on one of them but the preview will be empty until we finish last step.
 
-
-## Step 8: Write the show invoice 
+## Step 8: Write the show invoice
 
 Edit `lib/billing_web/templates/invoice/show.html.heex`
 Here we are consuming the `@invoice` data and make it look nice using our utility class.
@@ -676,20 +673,22 @@ Here we are consuming the `@invoice` data and make it look nice using our utilit
 ```html
 <div class="grid-2">
   <div>
-    <% logo = Routes.static_path(@conn, "/images/#{@invoice.seller.logo}") %>
-    <% bg_logo = "background-image: url(#{logo})" %>
-    <div class="bg-logo" style={bg_logo}></div>
-    <div class="uppercase text-lg font-bold text-slate-900"><%= @invoice.seller.name %></div>
-    <div class="text-slate-500 mt-4">
+    <% logo = Routes.static_path(@conn, "/images/#{@invoice.seller.logo}") %> <%
+    bg_logo = "background-image: url(#{logo})" %>
+    <div class="bg-logo" style="{bg_logo}"></div>
+    <div class="text-lg font-bold uppercase text-slate-900">
+      <%= @invoice.seller.name %>
+    </div>
+    <div class="mt-4 text-slate-500">
       <div><%= @invoice.seller.address %></div>
       <div><%= @invoice.seller.zip_code %> <%= @invoice.seller.city %></div>
       <div><%= @invoice.seller.country %></div>
     </div>
-    <div class="text-slate-500 mt-4">
+    <div class="mt-4 text-slate-500">
       <div>Registration number: <%= @invoice.seller.registration_number %></div>
       <div>Vat number: <%= @invoice.seller.vat_number %></div>
     </div>
-    <div class="text-slate-500 mt-4">
+    <div class="mt-4 text-slate-500">
       <div>Invoice number: <%= @invoice.number %></div>
       <div>Issued on: <%= @invoice.issued_on %></div>
       <div>Payment due date: <%= @invoice.issued_on %></div>
@@ -698,22 +697,25 @@ Here we are consuming the `@invoice` data and make it look nice using our utilit
 
   <div class="text-right">
     <div class="bg-logo"></div>
-    <div class="uppercase text-lg font-bold text-slate-900"><%= @invoice.client.name %></div>
-    <div class="text-slate-500 mt-4">
+    <div class="text-lg font-bold uppercase text-slate-900">
+      <%= @invoice.client.name %>
+    </div>
+    <div class="mt-4 text-slate-500">
       <div><%= @invoice.client.address %></div>
       <div><%= @invoice.client.zip_code %> <%= @invoice.client.city %></div>
       <div><%= @invoice.client.country %></div>
     </div>
-    <div class="text-slate-500 mt-4">
+    <div class="mt-4 text-slate-500">
       <div>Registration number: <%= @invoice.client.registration_number %></div>
       <div>Vat number: <%= @invoice.client.vat_number %></div>
     </div>
   </div>
 </div>
 
-<%# wrapping content with a no-break class prevent the content to break on multiples pages %> 
+<%# wrapping content with a no-break class prevent the content to break on
+multiples pages %>
 <div class="no-break">
-  <div class="mt-8 text-slate-900 font-bold"><%= @invoice.title %></div>
+  <div class="mt-8 font-bold text-slate-900"><%= @invoice.title %></div>
   <table class="mt-4 table text-slate-500">
     <thead class="bg-lightblue">
       <tr>
@@ -726,13 +728,13 @@ Here we are consuming the `@invoice` data and make it look nice using our utilit
     </thead>
     <tbody>
       <%= for article <- @invoice.articles do %>
-        <tr>
-          <td class="text-slate-900"><%= article.details %></td>
-          <td><%= article.qty %></td>
-          <td>€<%= article.unit_price %></td>
-          <td><%= article.vat %>%</td>
-          <td>€<%= article.total_excl_vat %></td>
-        </tr>
+      <tr>
+        <td class="text-slate-900"><%= article.details %></td>
+        <td><%= article.qty %></td>
+        <td>€<%= article.unit_price %></td>
+        <td><%= article.vat %>%</td>
+        <td>€<%= article.total_excl_vat %></td>
+      </tr>
       <% end %>
       <tr>
         <td></td>
@@ -754,18 +756,19 @@ Here we are consuming the `@invoice` data and make it look nice using our utilit
 </div>
 
 <div class="no-break">
-  <div class="mt-8 text-slate-900 font-bold">Payment information</div>
+  <div class="mt-8 font-bold text-slate-900">Payment information</div>
   <div class="mt-4 text-slate-500">
     <div>BIC: <%= @invoice.payment_information.bic %></div>
     <div>IBAN: <%= @invoice.payment_information.iban %></div>
     <div>Reference: <%= @invoice.payment_information.reference %></div>
-    <div>To use as a label on your bank transfer to identify the transaction</div>
-    <div class="mt-4 bg-lightblue p-4">
+    <div>
+      To use as a label on your bank transfer to identify the transaction
+    </div>
+    <div class="bg-lightblue mt-4 p-4">
       Payment possible by SEPA transfer only, SWIFT transfers are not accepted.
     </div>
   </div>
 </div>
-
 ```
 
 ## Ending

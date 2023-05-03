@@ -8,24 +8,27 @@ import _3_intersection_observer from './3-intersection-observer.png'
 import _cover from './cover.png'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
   date: '2022-10-15',
   title: 'Probuild Ex Part four',
-  tags: ['elixir', 'phoenix', 'liveview', 'tutorial', 'ecto', 'infinite scroll'],
-  description:
-    'A league of legend probuilds with elixir phoenix, part four'
+  tags: [
+    'elixir',
+    'phoenix',
+    'liveview',
+    'tutorial',
+    'ecto',
+    'infinite scroll',
+  ],
+  description: 'A league of legend probuilds with elixir phoenix, part four',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
-
 In [Part three](/posts/probuild-ex-part-three/) we setup our base liveview and `App` context.
 In this fourth part, we are going to create:
+
 - A [changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html) `Search` in our context `App` to modelize the liveview search parameters
 - A query with [ecto composition](https://elixirschool.com/blog/ecto-query-composition) method to search in our `Participants`
 - An infinite scroll with [liveview hook](https://hexdocs.pm/phoenix_live_view/js-interop.html#client-hooks-via-phx-hook) and [scrivener_ecto](https://github.com/drewolson/scrivener_ecto)
@@ -43,6 +46,7 @@ git checkout 0633b54a6465bf73273074267ea57cb75c0b3dca
 ## App context search - [commit](https://github.com/mrdotb/probuild_ex/commit/7cca40ad6906eec08daf09ab0fdc631e78bdc8fc)
 
 Edit `lib/probuild_ex/app.ex`
+
 ```elixir
 defmodule ProbuildEx.App do
   @moduledoc """
@@ -145,13 +149,16 @@ defmodule ProbuildEx.App do
     do: raise("not supported option #{inspect(key)} with value #{inspect(value)}")
 end
 ```
+
 We did two things:
+
 - We created a submodule `Search` using `embedded_schema` and `changeset` to represent what are the valid search parameters `search`, `platform_id` and `team_position`
 - We added some [ecto query composition](https://elixirschool.com/blog/ecto-query-composition) method to our `list_pro_participant_summoner` query
 
 Now let's ensure it works by adding some tests.
 
 Edit `test/support/fixtures/game_data_fixtures.ex`
+
 ```elixir
 defmodule ProbuildEx.GameDataFixtures do
 ...
@@ -188,6 +195,7 @@ end
 We add a pro player data to `GameDataFixtures`
 
 Edit `test/probuild_ex/app_test.exs`
+
 ```elixir
 defmodule ProbuildEx.AppTest do
   use ExUnit.Case, async: true
@@ -255,6 +263,7 @@ defmodule ProbuildEx.AppTest do
   end
 end
 ```
+
 We test our `Search.validate/1` function and `list_pro_participant_summoner/1` using real data from `weiwei` player. We ensure that we got one result when we look for the weiwei game.
 
 ## Liveview search - [commit](https://github.com/mrdotb/probuild_ex/commit/372831a0503b656ab52460b1aac1e75822cc4a7c)
@@ -262,6 +271,7 @@ We test our `Search.validate/1` function and `list_pro_participant_summoner/1` u
 Now it's time to integrate the search to our liveview.
 
 Edit `game_live/index.ex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -381,8 +391,8 @@ defmodule ProbuildExWeb.GameLive.Index do
 end
 ```
 
-
 Edit `game_live/index.html.heex`
+
 ```html
 <div class="flex flex-col">
 
@@ -505,7 +515,9 @@ Edit `game_live/index.html.heex`
 
 </div>
 ```
+
 Many changes in our `GameLive` liveview let's break it up:
+
 - I like to set a `@defaults` at the top of my liveview like this I am able to see the shape of the state easily
 - The `mount` assign the `@defaults`
 - The `handle_params` call `apply_action/3` but only if the liveview is `connected?` to avoid [double mount](https://kobrakai.de/kolumne/liveview-double-mount/)
@@ -515,20 +527,20 @@ Many changes in our `GameLive` liveview let's break it up:
 - We binded our buttons click to their team position
 - The rows render use a `cond` to check in order if we are `loading?`, if there is no results or display the results
 
-
 Visit [http://localhost:4000](http://localhost:4000) and try the search and filters
 
-
-<SingleLightbox src={_1_search_and_filter} alt="Search and filter implemented" />
-
-
+<SingleLightbox
+  src={_1_search_and_filter}
+  alt="Search and filter implemented"
+/>
 
 ## Search by champion name - [commit](https://github.com/mrdotb/probuild_ex/commit/f2961574f7a288a1f7119dc497b26ca2138690ba)
 
-Because we store `champion_id` and we want to search `champion` name  we need to create a champions_search_map.
+Because we store `champion_id` and we want to search `champion` name we need to create a champions_search_map.
 We will add a function to our `Ddragon.Cache` module.
 
 Edit `lib/probuild_ex/ddragon/cache.ex`
+
 ```elixir
 defmodule ProbuildEx.Ddragon.Cache do
 ...
@@ -578,6 +590,7 @@ end
 ```
 
 Edit `lib/probuild_ex/ddragon.ex`
+
 ```elixir
 defmodule ProbuildEx.Ddragon do
 ...
@@ -607,6 +620,7 @@ end
 We got the function to get our champions search map from Ddragon. Now we wil add it to our search close in the query.
 
 Edit `lib/probuild_ex/app.ex`
+
 ```elixir
 defmodule ProbuildEx.App do
 ...
@@ -640,6 +654,7 @@ We added some logic in our search close. We use `String.start_with?/2` to reduce
 We will use [scrivener_ecto](https://github.com/drewolson/scrivener_ecto) to handle the pagination.
 
 Edit `mix.exs`
+
 ```elixir
 defmodule ProbuildEx.MixProject do
 ...
@@ -661,6 +676,7 @@ end
 ```
 
 Edit `lib/probuild_ex/repo.ex`
+
 ```elixir
 defmodule ProbuildEx.Repo do
   use Ecto.Repo,
@@ -676,6 +692,7 @@ Nothing special we follow the scrivener installation guideline.
 ### Paginate query and liveview infiniteScroll [commit](https://github.com/mrdotb/probuild_ex/commit/eb78ead3d201c1c74478001e728de3198c8b5a7b)
 
 Edit `lib/probuild_ex/app.ex`
+
 ```elixir
 defmodule ProbuildEx.App do
 ...
@@ -706,9 +723,11 @@ defmodule ProbuildEx.App do
 ...
 end
 ```
+
 We need to remove the limit from the `base_query()` we rename the function `list_*` to `paginate_*` and add an extra parameter `page_number`.
 
 Edit `test/probuild_ex/app_test.exs`
+
 ```elixir
 defmodule ProbuildEx.AppTest do
   ...
@@ -730,54 +749,57 @@ defmodule ProbuildEx.AppTest do
   end
 end
 ```
+
 We edited the tests because now it returns a `%Scrivener.Page{}` instead of a list of `Participants`
 
 Edit `assets/js/app.js`
+
 ```javascript
 // https://elixirforum.com/t/how-can-i-implement-an-infinite-scroll-in-liveview/30457
 // https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver
 Hooks.InfiniteScroll = {
   page() {
-    return parseInt(this.el.dataset.page, 10);
+    return parseInt(this.el.dataset.page, 10)
   },
   loadMore(entries) {
-    const target = entries[0];
+    const target = entries[0]
     if (this.pending && target.isIntersecting && this.pending == this.page()) {
-      this.pending = this.page() + 1;
-      this.pushEvent("load-more", {});
+      this.pending = this.page() + 1
+      this.pushEvent('load-more', {})
     }
   },
   mounted() {
-    this.pending = this.page();
+    this.pending = this.page()
     const options = {
       root: null,
-      rootMargin: "-90% 0px 10% 0px",
-      threshold: 1.0
-    };
+      rootMargin: '-90% 0px 10% 0px',
+      threshold: 1.0,
+    }
     this.observer = new IntersectionObserver(this.loadMore.bind(this), options)
-    this.observer.observe(this.el);
+    this.observer.observe(this.el)
   },
   reconnected() {
     this.pending = this.page()
   },
   updated() {
-    this.pending = this.page();
+    this.pending = this.page()
   },
   beforeDestroy() {
-    this.observer.unobserve(this.el);
+    this.observer.unobserve(this.el)
   },
-};
+}
 ```
 
 We used the [`IntersectionObserver`](https://developer.mozilla.org/en-US/docs/Web/API/IntersectionObserver) to trigger the load of more data. I use a modified `rootMargin` to put the root on the bottom of the page. Below a schema representing the boxes model.
 The `loadMore` function will trigger when the `#load-more` div and the root overlap.
 
-
-<SingleLightbox src={_3_intersection_observer} alt="intersection observer image" />
-
-
+<SingleLightbox
+  src={_3_intersection_observer}
+  alt="intersection observer image"
+/>
 
 Edit `game_live/index.html.heex`
+
 ```elixir
 defmodule ProbuildExWeb.GameLive.Index do
   use ProbuildExWeb, :live_view
@@ -854,6 +876,7 @@ end
 ```
 
 Edit `game_live/index.html.heex`
+
 ```html
 <div class="flex flex-col">
 
@@ -981,25 +1004,24 @@ Edit `game_live/index.html.heex`
 
 </div>
 ```
+
 Changes:
+
 - We use a dynamic [`phx-update`](https://hexdocs.pm/phoenix_live_view/dom-patching.html#temporary-assigns) since we need to append extra data when the infinite scroll trigger or replace all the data when a new search query is typed.
 - We use [temporary assigns](https://hexdocs.pm/phoenix_live_view/dom-patching.html#temporary-assigns) for our participants in the mount since we will render a large collection of data it's better to not keep it in memory.
 - We handle the event `load-more` it will asynchronous call `query_pro_participants` while we put a loading animation
 - On the view we added `phx-update` and the `InfiniteScroll` hook
 
-
 Visit [http://localhost:4000](http://localhost:4000) and scroll to trigger a load more
 
-
 <SingleLightbox src={_2_load_more} alt="infinite scroll" />
-
-
 
 ## Closing thoughts
 
 Well done and thanks for sticking with me to the end! We did the first part of our liveview application.
 
 In the next part which is the final one we will:
+
 - refactor our current views in live components
 - query a game for all the details and add it to our view on click
 - add game in realtime using [PubSub](https://hexdocs.pm/phoenix_pubsub/Phoenix.PubSub.html)
@@ -1008,6 +1030,3 @@ In the next part which is the final one we will:
 Be sure to sign up to the newsletter so that you won't miss the next Part. Feel free to leave comments or feedback. I also appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
 
 See you soon !
-
-
-

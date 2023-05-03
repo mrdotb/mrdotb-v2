@@ -3,20 +3,15 @@ import { YouTube } from '@/components/YouTube'
 import { SingleLightbox } from '@/components/SingleLightbox'
 import Image from 'next/image'
 
-
 export const meta = {
   author: 'mrdotb',
   date: '2020-11-13',
   title: 'Show octal permissions of file or folder',
   tags: ['shell', 'til'],
-  description:
-    'Show octal permissions of file or folder'
+  description: 'Show octal permissions of file or folder',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 You want to show octal permission of a file or a folder.
 Use `stat`
@@ -29,8 +24,7 @@ stat -c "%a %A %n" file
 ```
 
 This alias is handy.
+
 ```shell
 alias octal="stat -c '%a %A %n'"
 ```
-
-

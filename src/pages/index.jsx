@@ -6,15 +6,8 @@ import { Button } from '@/components/Button'
 import { Card } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { Newsletter } from '@/components/Newsletter'
-import {
-  GitHubIcon,
-  LinkedInIcon,
-  TwitterIcon,
-} from '@/components/SocialIcons'
-import {
-  ArrowDownIcon,
-  BriefcaseIcon,
-} from '@/components/Icons'
+import { GitHubIcon, LinkedInIcon, TwitterIcon } from '@/components/SocialIcons'
+import { ArrowDownIcon, BriefcaseIcon } from '@/components/Icons'
 import logoEvoluflor from '@/images/logos/evoluflor.svg'
 import logoPablo from '@/images/logos/pablo.svg'
 import logoPandascore from '@/images/logos/pandascore.png'
@@ -26,9 +19,7 @@ import { getAllPosts } from '@/lib/data'
 function Post({ post }) {
   return (
     <Card as="article">
-      <Card.Title href={`/posts/${post.slug}`}>
-        {post.title}
-      </Card.Title>
+      <Card.Title href={`/posts/${post.slug}`}>{post.title}</Card.Title>
       <Card.Eyebrow as="time" dateTime={post.date} decorate>
         {formatDate(post.date)}
       </Card.Eyebrow>
@@ -54,7 +45,7 @@ function Resume() {
       logo: logoTtr,
       alt: 'logo of tontontresors company',
       start: '2022',
-      end: '2023'
+      end: '2023',
     },
     {
       company: 'Evoluflor',
@@ -62,7 +53,7 @@ function Resume() {
       logo: logoEvoluflor,
       alt: 'logo of evoluflor company',
       start: '2020',
-      end: '2022'
+      end: '2022',
     },
     {
       company: 'Pablo',
@@ -79,7 +70,7 @@ function Resume() {
       alt: 'logo of pandascore company',
       start: '2017',
       end: '2019',
-    }
+    },
   ]
 
   return (
@@ -92,7 +83,12 @@ function Resume() {
         {resume.map((role, roleIndex) => (
           <li key={roleIndex} className="flex gap-4">
             <div className="relative mt-1 flex h-10 w-10 flex-none items-center justify-center rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
-              <Image src={role.logo} alt={role.alt} className="h-7 w-7 rounded-full" unoptimized />
+              <Image
+                src={role.logo}
+                alt={role.alt}
+                className="h-7 w-7 rounded-full"
+                unoptimized
+              />
             </div>
             <dl className="flex flex-auto flex-wrap gap-x-2">
               <dt className="sr-only">Company</dt>
@@ -122,7 +118,10 @@ function Resume() {
           </li>
         ))}
       </ol>
-      <Button href="https://www.linkedin.com/in/baptiste-chaleil-9494a775/" className="group mt-6 w-full">
+      <Button
+        href="https://www.linkedin.com/in/baptiste-chaleil-9494a775/"
+        className="group mt-6 w-full"
+      >
         Download CV
         <ArrowDownIcon className="h-4 w-4 stroke-white" />
       </Button>
@@ -134,9 +133,7 @@ export default function Home({ posts }) {
   return (
     <>
       <Head>
-        <title>
-          Baptiste Chaleil - Freelance Elixir Developer
-        </title>
+        <title>Baptiste Chaleil - Freelance Elixir Developer</title>
         <meta
           name="description"
           content="Hi, I'm Baptiste - Elixir Developer. I am a developer specialized in development of web applications with Elixir. I love to develop. I care about UX, responsiveness, performance, maintainability and scalability."
@@ -148,10 +145,10 @@ export default function Home({ posts }) {
             Freelance elixir developer from Paris 🗼
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Hi, I&apos;m Baptiste - Elixir Developer. I am a developer specialized
-            in development of web applications with Elixir. I love to develop.
-            I care about UX, responsiveness, performance, maintainability and
-            scalability.
+            Hi, I&apos;m Baptiste - Elixir Developer. I am a developer
+            specialized in development of web applications with Elixir. I love
+            to develop. I care about UX, responsiveness, performance,
+            maintainability and scalability.
           </p>
           <div className="mt-6 flex gap-6">
             <SocialLink

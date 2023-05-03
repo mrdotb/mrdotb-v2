@@ -9,9 +9,7 @@ function Til({ til }) {
   return (
     <article className="md:grid md:grid-cols-4 md:items-baseline">
       <Card className="md:col-span-3">
-        <Card.Title href={`/tils/${til.slug}`}>
-          {til.title}
-        </Card.Title>
+        <Card.Title href={`/tils/${til.slug}`}>{til.title}</Card.Title>
         <Card.Eyebrow
           as="time"
           dateTime={til.date}
@@ -39,10 +37,7 @@ export default function TilsIndex({ tils }) {
     <>
       <Head>
         <title>Today I learned - Baptiste Chaleil</title>
-        <meta
-          name="description"
-          content="Today I learned"
-        />
+        <meta name="description" content="Today I learned" />
       </Head>
       <SimpleLayout title="Today I learned">
         <div className="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">

@@ -1,14 +1,16 @@
 import { useState, useRef } from 'react'
 
-export function Pre({collapsed, ...props}) {
-  let collapsable;
-  if (typeof collapsed === "undefined") {
+export function Pre({ collapsed, ...props }) {
+  let collapsable
+  if (typeof collapsed === 'undefined') {
     collapsable = false
   } else {
     collapsable = true
   }
 
-  const [isCollapsed, setCollapse] = useState(collapsable ? Boolean(collapsed) : null)
+  const [isCollapsed, setCollapse] = useState(
+    collapsable ? Boolean(collapsed) : null
+  )
 
   const toggleCollapse = () => {
     setCollapse(!isCollapsed)
@@ -34,8 +36,12 @@ export function Pre({collapsed, ...props}) {
   }
 
   return (
-    <div ref={textInput} onMouseEnter={onEnter} onMouseLeave={onExit} className="relative">
-
+    <div
+      ref={textInput}
+      onMouseEnter={onEnter}
+      onMouseLeave={onExit}
+      className="relative"
+    >
       {hovered && (
         <button
           aria-label="Copy code"
@@ -78,7 +84,7 @@ export function Pre({collapsed, ...props}) {
       )}
 
       <pre>
-        <div className={(collapsable && isCollapsed) ? "hidden" : undefined}>
+        <div className={collapsable && isCollapsed ? 'hidden' : undefined}>
           {props.children}
         </div>
         {collapsable && (
@@ -86,9 +92,10 @@ export function Pre({collapsed, ...props}) {
             <button
               aria-label="Collapse / Expand code"
               type="button"
-              className="rounded py-1 text-xs bg-gold-400 font-semibold text-white px-2"
-              onClick={toggleCollapse}>
-              {isCollapsed ? "Expand code" : "Collapse code"}
+              className="rounded bg-gold-400 px-2 py-1 text-xs font-semibold text-white"
+              onClick={toggleCollapse}
+            >
+              {isCollapsed ? 'Expand code' : 'Collapse code'}
             </button>
           </div>
         )}

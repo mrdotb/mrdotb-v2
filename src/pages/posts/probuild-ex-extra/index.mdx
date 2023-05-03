@@ -4,7 +4,6 @@ import { YouTube } from '@/components/YouTube'
 import _cover from './cover.jpg'
 import _index from './index.mdx'
 
-
 export const meta = {
   author: 'mrdotb',
   cover: _cover,
@@ -12,33 +11,30 @@ export const meta = {
   title: 'Probuild Ex Extra',
   tags: ['elixir', 'phoenix', 'ecto', 'tutorial', 'pagination', 'postgres'],
   description:
-    'Probuild Ex front started to be unresponsive. My journey about debugging and optimizing queries.'
+    'Probuild Ex front started to be unresponsive. My journey about debugging and optimizing queries.',
 }
-
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-
 It's been three months since Probuild Ex is collecting data 24/7. The database grew to 1500 MB. The front was unresponsive. I did some digging and made it fast again. I wanted to share my journey about debugging and optimizing query.
 
-*A league of legend probuilds provide easy access league of legends to Pro players builds across regions ex: ([probuilds.net](https://www.probuilds.net/), [probuildstats.com](https://probuildstats.com/))*
-
+_A league of legend probuilds provide easy access league of legends to Pro players builds across regions ex: ([probuilds.net](https://www.probuilds.net/), [probuildstats.com](https://probuildstats.com/))_
 
 ## Table of contents
 
 ## Have a peak 👀 at Probuild Ex
+
 https://probuild.fly.dev/
 
 ## Miss the series ?
-You can start on [Part one](/posts/probuild-ex-part-one/).
 
+You can start on [Part one](/posts/probuild-ex-part-one/).
 
 ## Unresponsive front
 
 <YouTube videoId="vFbHXYz6sSM" />
 
 The query is really slow.
-
 
 ## The `pg_stat_statements` extension
 
@@ -47,6 +43,7 @@ We will use the [pg_stat_statements](https://www.postgresql.org/docs/current/pgs
 ### Activating the `pg_stat_statements` extension
 
 With docker compose
+
 ```shell
 docker compose -f docker-compose.dev.yml exec -i postgres sh -c '\
 export PGDATA="/var/lib/postgresql/data"; \
@@ -59,6 +56,7 @@ echo "pg_stat_statements.track = all" >> $PGDATA/postgresql.conf; \
 ```
 
 On [fly.io](https://fly.io/) postgres we need to run this.
+
 ```
 fly postgres config update -a probuild-db --shared-preload-libraries pg_stat_statements
 fly restart -a probuild-db
@@ -79,6 +77,7 @@ end
 ```
 
 ### Running the migration
+
 ```elixir
 mix ecto.migrate
 ```
@@ -88,6 +87,7 @@ mix ecto.migrate
 I used the front of Probuild Ex to push some stats first. Then I used psql to query the view.
 
 I found this nice query for pg_stat_statements from this [article](https://www.cybertec-postgresql.com/en/postgresql-detecting-slow-queries-quickly/).
+
 ```sql
 SELECT
     substring(query, 1, 30) AS query,
@@ -102,14 +102,14 @@ ORDER BY
 LIMIT 10;
 ```
 
-It give us our worst queries. *This is the result on my local machine. It's 6 to 8 times slower on the production fly.io postgres*
+It give us our worst queries. _This is the result on my local machine. It's 6 to 8 times slower on the production fly.io postgres_
+
 ```shell
              query              | calls | total_time | mean_time | percentage
 --------------------------------+-------+------------+-----------+------------
  SELECT p0."id", p0."assists",  |     6 |    4291.19 |    715.20 |      56.06
  SELECT count($1) FROM "partici |     6 |    1227.87 |    204.64 |      16.04
 ```
-
 
 ## EXPLAIN ANALYSE the main query
 
@@ -161,7 +161,9 @@ Limit  (cost=34353.67..34355.97 rows=20 width=542) (actual time=663.820..666.611
  Execution Time: 666.793 ms
 (27 rows)
 ```
+
 A query plan can be intimidating at first. To understand a query plan, the following aspects should be considered:
+
 - Query Steps: A query plan consists of a series of steps that describe the operations to be performed to execute a query. The steps can include scans, joins, sorts, and aggregation operations, among others.
 - Cost: The cost of each step in the plan gives an estimate of the processing time and resources required to execute that step.
 - Actual Time: The actual time measurement provides an estimate of the time taken to execute the step during the execution of the query.
@@ -172,14 +174,13 @@ A query plan can be intimidating at first. To understand a query plan, the follo
 - Parallelization: Parallelization of operations in the query plan can improve performance. Understanding if and how operations are being parallelized in the plan is important.
 - Memory Usage: Memory usage can impact performance. Understanding the memory usage of each step in the plan and if it is causing any performance issues is important.
 
-The step that takes the most time in this plan is the "Sort" step with a cost of 15181.497..15185.221. *We ignore "LIMIT" and "Gather Merge" step because they are parent step*
+The step that takes the most time in this plan is the "Sort" step with a cost of 15181.497..15185.221. _We ignore "LIMIT" and "Gather Merge" step because they are parent step_
 We can optimize the ORDER BY clause using an index to improve the sorting performance.
-
 
 ### Creating the index on games.creation
 
 ```elixir
-mix ecto.gen.migration create_games_creation_desc_index 
+mix ecto.gen.migration create_games_creation_desc_index
 ```
 
 ```elixir
@@ -357,11 +358,13 @@ For my use case I wanted a pagination to do an infinite scroll. Cursor based pag
 I chose the [paginator](https://hexdocs.pm/paginator/readme.html) library.
 
 I removed scrivener and added paginator in `mix.exs`
+
 ```elixir
 {:paginator, "~> 1.2.0"}
 ```
 
 In `lib/probuild_ex/repo.ex`
+
 ```elixir
 defmodule ProbuildEx.Repo do
   use Ecto.Repo,
@@ -373,10 +376,12 @@ defmodule ProbuildEx.Repo do
     include_total_count: false
 end
 ```
+
 I removed scrivener and use paginator with similar options.
 I don't want to know the `total_count` since it will make a slow count request.
 
 `lib/probuild_ex/app.ex`
+
 ```elixir
   @doc """
   Query pro participant paginated based on search_opts.
@@ -398,6 +403,7 @@ I replaced the `page_number` with the `after_cursor` we will paginate over `game
 In the liveview `game_live/index.ex`
 
 I replaced the @defaults page with the paginator struct.
+
 ```elixir
   @defaults %{
     ...
@@ -407,53 +413,59 @@ I replaced the @defaults page with the paginator struct.
 ```
 
 `game_live/index.html.heex`
+
 ```elixir
     <div id="infinite-scroll" phx-hook="InfiniteScroll" data-cursor={@page.metadata.after} class="w-full max-w-3xl py-2 flex justify-center">
       <.spinner load?={@load_more?} />
     </div>
 ```
+
 In the view I passed the cursor instead of a page. The idea is to prevent further request if the cursor is null which mean we reached the last page.
 
 ```js
 Hooks.InfiniteScroll = {
   cursor() {
-    return this.el.dataset.cursor;
+    return this.el.dataset.cursor
   },
   maybeLoadMore(entries) {
-    const target = entries[0];
+    const target = entries[0]
     if (target.isIntersecting && this.cursor() && !this.loadMore) {
-      this.loadMore = true;
-      this.pushEvent("load-more", {});
+      this.loadMore = true
+      this.pushEvent('load-more', {})
     }
   },
   mounted() {
-    this.loadMore = false;
+    this.loadMore = false
     // block until the back-end told us we can load more again
-    this.handleEvent("load-more", () => {
-      this.loadMore = false;
+    this.handleEvent('load-more', () => {
+      this.loadMore = false
     })
 
     const options = {
       root: null,
-      rootMargin: "-90% 0px 10% 0px",
-      threshold: 1.0
-    };
-    this.observer = new IntersectionObserver(this.maybeLoadMore.bind(this), options);
-    this.observer.observe(this.el);
+      rootMargin: '-90% 0px 10% 0px',
+      threshold: 1.0,
+    }
+    this.observer = new IntersectionObserver(
+      this.maybeLoadMore.bind(this),
+      options
+    )
+    this.observer.observe(this.el)
   },
   reconnected() {
     // in case we go offline and miss the event
-    this.loadMore = false;
+    this.loadMore = false
   },
   beforeDestroy() {
-    this.observer.unobserve(this.el);
+    this.observer.unobserve(this.el)
   },
-};
+}
 ```
 
 I did some clean up here and prevent the client to send extra load more if the server did not answer yet.
 
 liveview `lib/probuild_ex_web/live/game_live/index.ex`
+
 ```elixir
   def handle_event("load-more", _params, socket) do
     page = socket.assigns.page
@@ -476,6 +488,7 @@ liveview `lib/probuild_ex_web/live/game_live/index.ex`
 If it's not already loading more and the after cursor is not nil then we query.
 
 liveview `lib/probuild_ex_web/live/game_live/index.ex`
+
 ```elixir
   def handle_info({:query_pro_participants, opts, after_cursor}, socket) do
     page = App.paginate_pro_participants(opts, after_cursor)
@@ -500,7 +513,6 @@ We receive an after cursor and not a page and when the query return we send an e
 
 <YouTube videoId="FkPqyibON48" />
 
-
 Success almost instant !
 
 ## Closing thoughts
@@ -508,6 +520,5 @@ Success almost instant !
 Well done and thanks for sticking with me to the end! It was very interesting to investigate these slow query and pagination issue and hopefully you picked up a couple of cool tips and tricks along the way.
 
 Be sure to sign up to the newsletter so that you won't miss my next article. I appreciate if you can star ⭐ the companion code [repo](https://github.com/mrdotb/probuild_ex).
-
 
 Until Next Time !

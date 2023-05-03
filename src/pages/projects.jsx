@@ -14,15 +14,18 @@ const projects = [
       'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
     link: { href: 'https://probuild.fly.dev/', label: 'probuild.fly.dev' },
     logo: logoProbuildEx,
-    alt: 'Logo of ProbuildEx'
+    alt: 'Logo of ProbuildEx',
   },
   {
     name: 'League of Replays',
     description:
       'My automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
-    link: { href: 'https://www.youtube.com/@league0freplays', label: 'youtube.com/@league0freplays' },
+    link: {
+      href: 'https://www.youtube.com/@league0freplays',
+      label: 'youtube.com/@league0freplays',
+    },
     logo: logoLeagueOfReplays,
-    alt: 'Logo of League of Replays'
+    alt: 'Logo of League of Replays',
   },
   {
     name: 'TontonTresors',
@@ -30,8 +33,8 @@ const projects = [
       'Tonton Trésors is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
     link: { href: 'https://tontontresors.com', label: 'tontontresors.com' },
     logo: logoTtr,
-    alt: 'Logo of TontonTresors'
-  }
+    alt: 'Logo of TontonTresors',
+  },
 ]
 
 function LinkIcon(props) {
@@ -69,7 +72,7 @@ export default function Projects() {
                 <Image
                   src={project.logo}
                   alt={project.alt}
-                  className="rounded-full h-8 w-8"
+                  className="h-8 w-8 rounded-full"
                   unoptimized
                 />
               </div>

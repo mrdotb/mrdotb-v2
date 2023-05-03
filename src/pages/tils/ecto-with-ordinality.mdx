@@ -8,14 +8,10 @@ export const meta = {
   date: '2022-08-23',
   title: 'Ecto With Ordinality',
   tags: ['til', 'postgres', 'ecto', 'fragment'],
-  description:
-    'Ecto use postgres with Ordinality'
+  description: 'Ecto use postgres with Ordinality',
 }
 
-
 export default (props) => <PostLayout meta={meta} {...props} />
-
-
 
 # Ecto with ordinality
 
@@ -69,6 +65,3 @@ end
 
 iex> Post |> post_by_id_in_order([1, 2, 4, 3]) |> Repo.all()
 ```
-
-
-

@@ -18,7 +18,7 @@ async function getPosts() {
   })
 
   const posts = await Promise.all(postFilenames.map(importPost))
-  return posts.map(post => ({type: 'post', ...post}))
+  return posts.map((post) => ({ type: 'post', ...post }))
 }
 
 async function importTil(tilFilename) {
@@ -38,7 +38,7 @@ async function getTils() {
   })
 
   const tils = await Promise.all(tilFilenames.map(importTil))
-  return tils.map(til => ({type: 'til', ...til}))
+  return tils.map((til) => ({ type: 'til', ...til }))
 }
 
 export async function getAllPosts() {
@@ -57,16 +57,18 @@ export async function getData() {
   let posts = await getPosts()
   let tils = await getTils()
 
-  return posts
-    .concat(tils)
-    .sort((a, z) => new Date(z.date) - new Date(a.date))
+  return posts.concat(tils).sort((a, z) => new Date(z.date) - new Date(a.date))
 }
 
 export async function getUniqueTags() {
   const posts = await getPosts()
   const tils = await getTils()
 
-  const tags = tils.concat(posts).map(post => post.tags).flat().sort()
+  const tags = tils
+    .concat(posts)
+    .map((post) => post.tags)
+    .flat()
+    .sort()
   const uniqueTags = [...new Set(tags)]
   return uniqueTags
 }
@@ -74,5 +76,5 @@ export async function getUniqueTags() {
 export async function getDataByTag(tag) {
   let data = await getData()
 
-  return data.filter(til => til.tags.includes(tag))
+  return data.filter((til) => til.tags.includes(tag))
 }
