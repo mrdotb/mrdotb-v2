@@ -18,6 +18,7 @@ import {
 import logoEvoluflor from '@/images/logos/evoluflor.svg'
 import logoPablo from '@/images/logos/pablo.svg'
 import logoPandascore from '@/images/logos/pandascore.png'
+import logoTtr from '@/images/logos/ttr.svg'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
 import { getAllPosts } from '@/lib/data'
@@ -47,6 +48,14 @@ function SocialLink({ icon: Icon, ...props }) {
 
 function Resume() {
   let resume = [
+    {
+      company: 'Tontontresors',
+      title: 'CTO',
+      logo: logoTtr,
+      alt: 'logo of tontontresors company',
+      start: '2022',
+      end: '2023'
+    },
     {
       company: 'Evoluflor',
       title: 'Elixir developer',
