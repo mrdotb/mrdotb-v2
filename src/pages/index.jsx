@@ -123,7 +123,8 @@ function Resume() {
         ))}
       </ol>
       <Button
-        href="https://www.linkedin.com/in/baptiste-chaleil-9494a775/"
+        href="/resume.pdf"
+        target="_blank"
         className="group mt-6 w-full"
       >
         Download CV
