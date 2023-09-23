@@ -6,7 +6,8 @@ export const meta = {
   date: '2023-08-05',
   title: 'Deploy phoenix with kamal',
   tags: ['elixir', 'phoenix', 'kamal', 'digitalocean'],
-  description: 'A walkthrough video to deploy a simple phoenix app on digital ocean using kamal',
+  description:
+    'A walkthrough video to deploy a simple phoenix app on digital ocean using kamal',
 }
 
 export default (props) => <PostLayout meta={meta} {...props} />
@@ -18,20 +19,24 @@ export default (props) => <PostLayout meta={meta} {...props} />
 Kamal deploys web apps anywhere from bare metal to cloud VMs using Docker with no downtime. We will deploying a phoenix app to digital ocean.
 
 ## Links
- - [Create ssh keys](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/)
- - [kamal](https://kamal-deploy.org/)
- - [Multi Node elixir](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html)
+
+- [Create ssh keys](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/)
+- [kamal](https://kamal-deploy.org/)
+- [Multi Node elixir](https://elixir-lang.org/getting-started/mix-otp/distributed-tasks.html)
 
 ## Prerequisite
 
 You need to have elixir, ruby and docker installed:
+
 - I recommand using [asdf](https://asdf-vm.com/) to manage ruby / elixir
 - Install [docker](https://docker.com)
 
 You need to have ssh keys ready:
+
 - [create pub / priv keys](https://docs.digitalocean.com/products/droplets/how-to/add-ssh-keys/create-with-openssh/)
 
 We will use the following services for hosting and managing the domain:
+
 - [Digital Ocean](https://m.do.co/c/9087994d9426) feel free to use my referal link it give you $200 credit.
 - [Github](https://github.com/) to host the docker image
 - [Cloudflare](https://www.cloudflare.com/) to manage the domain
@@ -41,6 +46,7 @@ We will use the following services for hosting and managing the domain:
 Follow the [installation guide](https://asdf-vm.com/guide/getting-started.html)
 
 We need 3 plugins ruby erlang and elixir
+
 ```
 asdf plugin-add ruby https://github.com/asdf-vm/asdf-ruby.git
 asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
@@ -50,6 +56,7 @@ asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 You will also need some extra packages for building erlang dependings of your OS check [asdf-erlang](https://github.com/asdf-vm/asdf-erlang)
 
 Create a `~/.tool-versions` with the following content
+
 ```
 ruby 3.2.1
 elixir 1.14.3-otp-25
@@ -96,18 +103,18 @@ Follow the [installation guide](https://docs.docker.com/get-docker/)
 - Connect droplets
 - edit health_check to /up
 
-
 ## Creating the phoenix project
 
 ```
 mix archive.install hex phx_new 1.7.7
-mix phx.new blogex 
+mix phx.new blogex
 cd blogex
 ```
 
 ### Creating a local dev database with docker compose
 
 Create a file called `docker-compose.dev.yml`
+
 ```yaml
 version: '3.8'
 
@@ -118,16 +125,18 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - "5432:5432"
-    restart: "no"
+      - '5432:5432'
+    restart: 'no'
 ```
 
 Run the compose container postgres
+
 ```
 docker compose -f docker-compose.dev.yml up
 ```
 
 Create the database
+
 ```
 mix ecto.create
 ```
@@ -135,11 +144,13 @@ mix ecto.create
 ### Generating the article crud
 
 We will use phx.gen
+
 ```
 mix phx.gen.live Blog Article articles title:text body:text
 ```
 
 Add the created routes to `lib/blogex_web/router.ex`
+
 ```elixir
 ...
     live "/articles", ArticleLive.Index, :index
@@ -152,6 +163,7 @@ Add the created routes to `lib/blogex_web/router.ex`
 ```
 
 Run the migration
+
 ```
 mix phx.migrate
 ```
@@ -163,6 +175,7 @@ Digital ocean and kamal expect a healthcheck route on `/up` that answer a 200 HT
 ### Writing HealthCheckPlug
 
 Create `lib/blogex_web/health_check.ex`
+
 ```elixir
 defmodule BlogexWeb.HealthCheckPlug do
   @moduledoc """
@@ -188,6 +201,7 @@ end
 We will add the plugin directly in the endpoint before the logs
 
 Edit `lib/blogex_web/endpoint.ex`
+
 ```elixir
 ...
   plug BlogexWeb.HealthCheckPlug
@@ -195,8 +209,9 @@ Edit `lib/blogex_web/endpoint.ex`
 ```
 
 Testing `/up`
+
 ```
-curl -v localhost:4000/up 
+curl -v localhost:4000/up
 ```
 
 ### Preparing the release
@@ -204,7 +219,9 @@ curl -v localhost:4000/up
 ```
 mix release.init
 ```
+
 Edit `rel/env.sh.eex`
+
 ```elixir
 ip=$(hostname -i)
 export RELEASE_DISTRIBUTION=name
@@ -214,6 +231,7 @@ export RELEASE_NODE=<%= @release.name %>@$ip
 ### Preparing the image
 
 Let's generate the base docker image with phx cmd
+
 ```
 mix phx.gen.release --docker
 ```
@@ -221,12 +239,14 @@ mix phx.gen.release --docker
 We need to add curl to our image it's used by kamal to do healthcheck
 
 On the Dockerfile add curl to the list of dependencies
+
 ```
 RUN apt-get update -y && apt-get install -y libstdc++6 openssl libncurses5 locales curl \
   && apt-get clean && rm -f /var/lib/apt/lists/*_*
 ```
 
 We also need to expose port 3000
+
 ```
 EXPOSE 3000
 ```
@@ -236,6 +256,7 @@ EXPOSE 3000
 Let's get a github token to create docker images
 
 Go to https://github.com/settings/tokens/new:
+
 - Note: blogex
 - Select scopes `write:packages`
 - Generate token
@@ -245,6 +266,7 @@ Go to https://github.com/settings/tokens/new:
 ### Installation
 
 Let's instal the kamal gem
+
 ```
 gem install kamal
 kamal version
@@ -255,6 +277,7 @@ kamal version
 ```
 kamal init
 ```
+
 It will create a `/config/deploy.yml` and an `.env` file
 
 ### Edit the .env
@@ -262,11 +285,13 @@ It will create a `/config/deploy.yml` and an `.env` file
 We need to generate some secrets for our deployment
 
 Generate `SECRET_KEY_BASE`
+
 ```
 mix phx.gen.secret
 ```
 
 Edit the `.env` file with our generated secrets
+
 ```
 KAMAL_REGISTRY_PASSWORD=<github-token>
 SECRET_KEY_BASE=<secret-key-base>
@@ -275,6 +300,7 @@ PHX_HOST=[yourdomain]
 ```
 
 Edit `config/runtime.exs`
+
 ```elixir
   config :blogex, Blogex.Repo,
     ssl: true,
@@ -288,6 +314,7 @@ Edit `config/runtime.exs`
 ### Edit deploy.yml
 
 Edit the `config/deploy.yml`
+
 ```yaml
 # Name of your application. Used to uniquely configure containers.
 service: blogex
@@ -329,7 +356,7 @@ builder:
   # If you’re developing on the same architecture as the one you’re deploying on
   # which is AMD64
   multiarch: false
- # If you’re developing on ARM64 (like Apple Silicon)
+  # If you’re developing on ARM64 (like Apple Silicon)
   # local:
   #   arch: arm64
   #   host: unix:///Users/<%= `whoami`.strip %>/.docker/run/docker.sock
@@ -339,15 +366,16 @@ builder:
   #   host: ssh://root@192.168.0.1
 ```
 
-
 ## Kamal deploy
 
 ```
 kamal server bootstrap
 ```
+
 It will install docker and both server.
 
 make the project a git repo
+
 ```
 git init
 ```
@@ -357,12 +385,12 @@ kamal deploy
 ```
 
 It will:
+
 - build the blogex image locally
 - push the image to the registry
 - connect on the server through ssh
 - pull the image from the registry
-- create a container with 
-
+- create a container with
 
 ## Cloudflare
 
@@ -380,17 +408,20 @@ Create a new record, Type `A`, Name `blogex.mrdotb.com`, IPv4 `[load-balancer-ip
 You will notice an error if you hit the `yourdomain/articles` that's because we need to run the migration
 
 Let's check the logs
+
 ```
 kamal app logs
 ```
 
 Let's run the migration
+
 ```
 kamal app exec -i --reuse '/app/bin/blogex remote'
 Blogex.Release.migrate
 ```
 
 ### Edit & re-deploy
+
 Let's edit the body input to be a textarea
 
 ```
@@ -400,11 +431,13 @@ kamal deploy
 ## Rolling back
 
 Listing containers
+
 ```
 kamal app containers
 ```
 
 Rolling back
+
 ```
 kamal rollback [git hash]
 ```

@@ -6,14 +6,16 @@ import Image from 'next/image'
 export const meta = {
   author: 'mrdotb',
   date: '2023-07-29',
-  title: 'How to Implement JavaScript Code Splitting in Phoenix 1.7: A Step-by-step Guide',
+  title:
+    'How to Implement JavaScript Code Splitting in Phoenix 1.7: A Step-by-step Guide',
   tags: ['elixir', 'phoenix', 'esbuild', 'javascript'],
-  description: 'Leverage the power of ESBuild\'s code splitting in your Phoenix 1.7 project to optimize load times and improve your app\'s performance. This detailed guide walks you through the process.',
+  description:
+    "Leverage the power of ESBuild's code splitting in your Phoenix 1.7 project to optimize load times and improve your app's performance. This detailed guide walks you through the process.",
 }
 
 export default (props) => <PostLayout meta={meta} {...props} />
 
-Today, I faced a challenge in my Phoenix project. I'm using a JavaScript [markdown editor](https://github.com/bytedance/bytemd) with a hook on one of the forms. This ended up significantly increasing the size of my app.js file. 
+Today, I faced a challenge in my Phoenix project. I'm using a JavaScript [markdown editor](https://github.com/bytedance/bytemd) with a hook on one of the forms. This ended up significantly increasing the size of my app.js file.
 
 Luckily, esbuild offers a feature called [code splitting](https://esbuild.github.io/api/#splitting), which came to my rescue.
 
@@ -42,6 +44,7 @@ config :esbuild,
 ```
 
 Notes on options:
+
 - `--target=es2022`: I'm using a very modern target, es2022. For my use case, I don't need to support old browsers.
 - `--main-fields=module,main,exports`: This is extremely helpful if you want to load a specific file from a JS library. Refer to [main-fields](https://esbuild.github.io/api/#main-fields) for more details.
 - `--format=esm`: Code splitting is still a work in progress (WIP) and only functions with the `esm` format.
@@ -57,21 +60,21 @@ Then, update your hook to dynamically load the library in the mounted section:
 
 ```js
 const ByteMd = {
-  mounted () {
+  mounted() {
     import('bytemd').then(({ Editor }) => {
       const targetId = this.el.dataset.targetId
       this.$target = document.getElementById(targetId)
       this.editor = new Editor({
         target: this.el,
-        props: { value: this.$target.value }
+        props: { value: this.$target.value },
       })
       this.editor.$on('change', this.onChange.bind(this))
     })
   },
-  onChange (event) {
+  onChange(event) {
     this.editor.$set({ value: event.detail.value })
     this.$target.value = event.detail.value
-  }
+  },
 }
 
 export default ByteMd
@@ -83,8 +86,7 @@ You can check out this short demo video to see it in action:
 
 When the hook is mounted for the first time, the JavaScript chunk that contains the 'bytemd' library is fetched via an AJAX request. Any subsequent mounts won't request the library again.
 
-
-Before concluding, there's an important consideration when dealing with code splitting and module loading. In situations where the module is not immediately available, you might want to hide the relevant `<div>` or display a loading spinner in your template. This could help enhance the user experience by signaling that the application is processing something in the background. 
+Before concluding, there's an important consideration when dealing with code splitting and module loading. In situations where the module is not immediately available, you might want to hide the relevant `<div>` or display a loading spinner in your template. This could help enhance the user experience by signaling that the application is processing something in the background.
 
 Once the module import is complete, you can remove the spinner or the hidden class. Here's an example of how you can accomplish this:
 

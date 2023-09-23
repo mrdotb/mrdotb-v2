@@ -122,11 +122,7 @@ function Resume() {
           </li>
         ))}
       </ol>
-      <Button
-        href="/resume.pdf"
-        target="_blank"
-        className="group mt-6 w-full"
-      >
+      <Button href="/resume.pdf" target="_blank" className="group mt-6 w-full">
         Download CV
         <ArrowDownIcon className="h-4 w-4 stroke-white" />
       </Button>

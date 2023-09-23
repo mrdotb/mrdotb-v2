@@ -34,7 +34,7 @@ const projects = [
     link: { href: 'https://tontontresors.com', label: 'tontontresors.com' },
     logo: logoTtr,
     alt: 'Logo of TontonTresors',
-  }
+  },
 ]
 
 function LinkIcon(props) {
