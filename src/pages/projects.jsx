@@ -12,7 +12,7 @@ const projects = [
     name: 'ProbuildEx',
     description:
       'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
-    link: { href: 'https://probuild.fly.dev/', label: 'probuild.fly.dev' },
+    link: { href: 'https://probuild.mrdotb.com/', label: 'probuild.mrdotb.com' },
     logo: logoProbuildEx,
     alt: 'Logo of ProbuildEx',
   },
