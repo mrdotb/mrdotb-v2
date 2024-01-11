@@ -44,20 +44,12 @@ function SocialLink({ icon: Icon, ...props }) {
 function Resume() {
   let resume = [
     {
-      company: 'Tontontresors',
-      title: 'CTO',
-      logo: logoTtr,
-      alt: 'logo of tontontresors company',
-      start: '2022',
-      end: '2023',
-    },
-    {
       company: 'Evoluflor',
       title: 'Elixir developer',
       logo: logoEvoluflor,
       alt: 'logo of evoluflor company',
       start: '2020',
-      end: '2022',
+      end: '2023',
     },
     {
       company: 'Pablo',
