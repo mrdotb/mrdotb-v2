@@ -138,10 +138,7 @@ export default function Home({ datas }) {
             Freelance elixir developer from Paris 🗼
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Hi, I&apos;m Baptiste - Elixir Developer. I am a developer
-            specialized in development of web applications with Elixir. I love
-            to develop. I care about UX, responsiveness, performance,
-            maintainability and scalability.
+            Hello, I'm Baptiste, a dedicated Elixir specialist with six years of experience in development. I've led as a lead developer for a SaaS cashier system for three years, excelling independently and in teams. I thrive on adaptability and a hacker mindset, always eager to engineer innovative solutions."
           </p>
           <div className="mt-6 flex gap-6">
             <SocialLink
