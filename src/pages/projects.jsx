@@ -5,7 +5,7 @@ import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import logoProbuildEx from '@/images/logos/probuild.png'
 import logoLeagueOfReplays from '@/images/logos/league-of-replays.jpg'
-import logoTtr from '@/images/logos/ttr.svg'
+import logoScarfSage from '@/images/logos/scarfsage.svg'
 
 const projects = [
   {
@@ -28,12 +28,12 @@ const projects = [
     alt: 'Logo of League of Replays',
   },
   {
-    name: 'TontonTresors',
+    name: 'ScarfSage',
     description:
-      'Tonton Trésors is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
-    link: { href: 'https://tontontresors.com', label: 'tontontresors.com' },
-    logo: logoTtr,
-    alt: 'Logo of TontonTresors',
+      'Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
+    link: { href: 'https://scarfsage.com', label: 'scarfsage.com' },
+    logo: logoScarfSage,
+    alt: 'Logo of ScarfSage',
   },
 ]
 

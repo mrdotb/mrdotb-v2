@@ -11,7 +11,7 @@ import { ArrowDownIcon, BriefcaseIcon } from '@/components/Icons'
 import logoEvoluflor from '@/images/logos/evoluflor.svg'
 import logoPablo from '@/images/logos/pablo.svg'
 import logoPandascore from '@/images/logos/pandascore.png'
-import logoTtr from '@/images/logos/ttr.svg'
+import logoScarfSage from '@/images/logos/scarfsage.svg'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
 import { getData } from '@/lib/data'
@@ -50,6 +50,14 @@ function Resume() {
       alt: 'logo of evoluflor company',
       start: '2020',
       end: '2023',
+    },
+    {
+      company: 'ScarfSage',
+      title: 'Founder',
+      logo: logoScarfSage,
+      alt: 'logo of scarfsage company',
+      start: '2022',
+      end: 'Present',
     },
     {
       company: 'Pablo',
