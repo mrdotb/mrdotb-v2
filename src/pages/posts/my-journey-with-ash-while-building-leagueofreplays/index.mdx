@@ -1,0 +1,40 @@
+import { PostLayout } from '@/components/PostLayout'
+export const meta = {
+  author: 'mrdotb',
+  date: '2024-02-17',
+  title: 'My journey with Ash while building LeagueOfReplays',
+  tags: ['elixir', 'phoenix', 'ash', 'riot api'],
+  description: 'Discover the development of LeagueOfReplays, an open-source project for replaying professional League of Legends games using Ash and Elixir. This concise overview covers the project\'s architecture, the advantages of using Ash, community support, and the challenges faced during development.',
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+Since embarking on my journey with Phoenix and Elixir in 2017, I have diligently stay up to date with the latest developments within the community.
+
+My interest was particularly captured by [Ash](https://ash-hq.org/), and I decided to explore it through the development of an open-source project named [LeagueOfReplays](https://leagueofreplays.co/). This initiative is focused on recording and replaying League of Legends games, with the objective of enhancing gamers' experiences by enabling them to replay professional players' games with their League of Legends client.
+
+## Project Overview
+The project is architecturally divided into three main components:
+- [The Replay Manager](https://github.com/mrdotb/leagueofreplays/tree/main/lib/lor/lol/replays): This component is responsible for identifying and capturing professional players' games, securing essential game data such as chunks, and keyframes, which are pivotal for creating a replay.
+- [The Spectator Server](https://github.com/mrdotb/leagueofreplays/tree/main/lib/lor_spectator): Functions as a mimic of the League of Legends spectator server, communication with the game client.
+- [The Web Server](https://github.com/mrdotb/leagueofreplays/tree/main/lib/lor_web): Acts as a portal to showcase current recordings and database contents, in addition to providing scripts for Windows and Mac to facilitate replay execution.
+
+## Experience with Ash
+Throughout the development of the LeagueOfReplays project, I employed Ash to model the domain. This section outlines the pros and cons I encountered during this process.
+
+Pros:
+- **Community Support**: The Ash community's responsiveness and supportiveness were exceptional. Direct engagement with Zach, the framework's creator, and contributions to the documentation significantly improved my understanding and application of Ash.
+- **Resource Evolution**: Ash's design philosophy encourages the evolution of resources, allowing developers to begin with a unified resource model and transition changesets and queries into separate files as the project grow in complexity.
+- [**Action Conventions**](https://ash-hq.org/docs/guides/ash/latest/topics/actions): Ash standardizes action conventions (`:read`, `:create`, `:update`, `:destroy`), giving you a base CRUD while providing the flexibility to introduce custom actions for more specific scenarios.
+- **Migration Generator**: The framework's migration generator ensures a direct correlation between the resource and the database schema, effectively addressing common issues such as nullable and non-nullable fields.
+- **Escape Hatch**: Ash recognizes the need for developers to occasionally circumvent its abstractions, granting the freedom to utilize direct Ecto queries.
+
+Cons:
+- **[Flow](https://ash-hq.org/docs/guides/ash/latest/topics/flows) and [Reactor](https://ash-hq.com/docs/guides/reactor/latest/tutorials/getting-started-with-reactor) Complexity**: The powerful pipeline capabilities of Ash's Flow and Reactor features present a steep learning curve, with it not being immediately apparent when and how to implement them in a real-world project.
+- A scarcity of real-world project source codes for reference.
+
+## Conclusion
+
+The process of developing LeagueOfReplays with Ash has been rewarding. Despite facing obstacles, the overall experience has been favorable. I will continue to follow Ash evolution and I am looking forward to employ it in future projects.
+
+See you!
