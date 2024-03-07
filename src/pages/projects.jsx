@@ -4,22 +4,30 @@ import Image from 'next/image'
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import logoProbuildEx from '@/images/logos/probuild.png'
-import logoLeagueOfReplays from '@/images/logos/league-of-replays.jpg'
+import logoLeagueOfReplays from '@/images/logos/league-of-replays.svg'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
 
 const projects = [
   {
-    name: 'ProbuildEx',
+    name: 'League of replays',
     description:
-      'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
-    link: { href: 'https://probuild.mrdotb.com/', label: 'probuild.mrdotb.com' },
-    logo: logoProbuildEx,
-    alt: 'Logo of ProbuildEx',
+      'Record and replay league of legends game using the spectator api.',
+    link: { href: 'https://leagueofreplays.co?ref=mrdotb.com', label: 'leagueofreplays.co' },
+    logo: logoLeagueOfReplays,
+    alt: 'Logo of League of Replays',
   },
   {
-    name: 'League of Replays',
+    name: 'ScarfSage',
     description:
-      'My automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
+      'Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
+    link: { href: 'https://scarfsage.com?ref=mrdotb.com', label: 'scarfsage.com' },
+    logo: logoScarfSage,
+    alt: 'Logo of ScarfSage',
+  },
+  {
+    name: 'League of Replays channel',
+    description:
+      'An automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
     link: {
       href: 'https://www.youtube.com/@league0freplays',
       label: 'youtube.com/@league0freplays',
@@ -28,13 +36,13 @@ const projects = [
     alt: 'Logo of League of Replays',
   },
   {
-    name: 'ScarfSage',
+    name: 'ProbuildEx',
     description:
-      'Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
-    link: { href: 'https://scarfsage.com', label: 'scarfsage.com' },
-    logo: logoScarfSage,
-    alt: 'Logo of ScarfSage',
-  },
+      'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
+    link: { href: 'https://probuild.mrdotb.com?ref=mrdotb.com', label: 'probuild.mrdotb.com' },
+    logo: logoProbuildEx,
+    alt: 'Logo of ProbuildEx',
+  }
 ]
 
 function LinkIcon(props) {
@@ -60,7 +68,7 @@ export default function Projects() {
       </Head>
       <SimpleLayout
         title="Things I’ve made trying to put my dent in the universe."
-        intro="I’ve worked on many personal projects over the years but these are the ones that I’m most proud of. I take pleasure in working with the gaming and luxury sectors."
+        intro="I’ve worked on many personal projects over the years but these are the ones that I’m most proud of. I take pleasure in working with the gaming and vintage sectors."
       >
         <ul
           role="list"

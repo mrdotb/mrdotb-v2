@@ -62,7 +62,7 @@ export default function About() {
                 </a>{' '}
                 and <a href="http://absinthe-graphql.org/">Absinthe</a> the
                 GraphQL toolkit for Elixir. My professional background includes
-                working as the main backend developer for a cashier SaaS app at{' '}
+                working as the lead developer for a cashier SaaS app at{' '}
                 <a href="https://www.evoluflor.fr/">evoluflor</a> and being
                 responsible for infrastructure and various projects at{' '}
                 <a href="https://pandascore.co">PandaScore</a>, where I
@@ -75,7 +75,7 @@ export default function About() {
               </p>
               <p>
                 In addition to my Elixir expertise, I am well-versed in
-                JavaScript, Node.js, and the React framework. I stay up-to-date
+                JavaScript, Node.js, and the next.js framework. I stay up-to-date
                 with industry trends and news by frequenting Hacker News
                 regularly.
               </p>
