@@ -1,0 +1,52 @@
+import { PostLayout } from '@/components/PostLayout'
+
+import { SingleLightbox } from '@/components/SingleLightbox'
+import _cover from './cover.webp'
+// import _baptiste1 from './baptiste1.jpg'
+import _baptiste2 from './baptiste2.jpg'
+import _dressing from './dressing.jpg'
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2024-06-09',
+  title: 'Elixir Paris Meetup #24 @Ecole 42',
+  tags: ['elixir', 'paris.ex', 'meetup'],
+  cover: _cover,
+  description: 'A concise overview about Ash while developing LeagueOfReplays.',
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+# Elixir Paris Meetup #24
+
+I organized the [Elixir Paris Meetup #24](https://www.meetup.com/fr-FR/elixir/events/301199042/) at [42 school](https://42.fr/) in Paris with the help of [Nicolas Talfer](https://www.linkedin.com/in/nicolas-talfer/).
+
+## The Talks
+
+We had two talks during the meetup.
+
+### Talk 1: Writing NIFs with Rustler
+
+The first talk was presented by me, focusing on writing Native Implemented Functions (NIFs) using Rustler.
+[Check out the slides](https://docs.google.com/presentation/d/1Im8or5OhHH39IdxR7TtDUOFCTpm4MH5xvA-Vo8hisik/edit?usp=sharing).
+
+<SingleLightbox src={_baptiste2} alt="Baptiste presenting the slides" />
+
+### Talk 2: Unit Testing in Elixir - Tips and Tricks
+
+The second talk was delivered by [Nicolas Talfer](https://www.linkedin.com/in/nicolas-talfer/), covering valuable tips and tricks for unit testing in Elixir.
+[Check out the slides](/posts/elixir-paris-meetup-24-ecole-42/slide-unit-testing.pdf) and the [repository](https://github.com/nicolas-talfer/ljdc/).
+
+## The Live Stream
+
+For the first time, the Elixir Paris Meetup was broadcasted live on [Twitch](https://www.twitch.tv/videos/2165182272). Although the sound quality needs improvement, we are optimistic about enhancing the experience in future streams.
+
+## The Afterwork
+
+We organized a crowdfunding campaign to buy drinks and food for the afterwork session, and it was a success. My lovely wife helped prepare kimbap for everyone, and our alchemists' team set up trays beautifully.
+
+<SingleLightbox src={_dressing} alt="The afterwork" />
+
+## Conclusion
+
+Organizing this meetup was a challenging yet rewarding experience. Despite my lack of expertise in event organization, practice makes perfect, and I'm eager to do it again!
