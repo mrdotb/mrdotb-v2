@@ -12,6 +12,8 @@ import logoEvoluflor from '@/images/logos/evoluflor.svg'
 import logoPablo from '@/images/logos/pablo.svg'
 import logoPandascore from '@/images/logos/pandascore.png'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
+import logoDeepido from '@/images/logos/deepido.jpeg'
+import logoPareto from '@/images/logos/pareto.jpeg'
 import { formatDate } from '@/lib/formatDate'
 import { generateRssFeed } from '@/lib/generateRssFeed'
 import { getData } from '@/lib/data'
@@ -43,6 +45,22 @@ function SocialLink({ icon: Icon, ...props }) {
 
 function Resume() {
   let resume = [
+    {
+      company: 'Pareto Holding',
+      title: 'Elixir Developer',
+      logo: logoPareto,
+      alt: 'logo of pareto holding',
+      start: '2024',
+      end: '2024',
+    },
+    {
+      company: 'Deepido',
+      title: 'Elixir Developer',
+      logo: logoDeepido,
+      alt: 'logo of deepido company',
+      start: '2024',
+      end: '2024',
+    },
     {
       company: 'Evoluflor',
       title: 'Lead Developer',
@@ -122,7 +140,11 @@ function Resume() {
           </li>
         ))}
       </ol>
-      <Button href="/resume.pdf" target="_blank" className="group mt-6 w-full">
+      <Button
+        href="https://www.linkedin.com/in/baptiste-chaleil-9494a775/"
+        target="_blank"
+        className="group mt-6 w-full"
+      >
         Download CV
         <ArrowDownIcon className="h-4 w-4 stroke-white" />
       </Button>
@@ -146,7 +168,11 @@ export default function Home({ datas }) {
             Freelance elixir developer from Paris 🗼
           </h1>
           <p className="mt-6 text-base text-zinc-600 dark:text-zinc-400">
-            Hello, I am Baptiste, a tech professional with six years of diverse development experience. I led as a lead developer for a SaaS cashier system for three years, excelling both independently and in teams. I embrace adaptability and a hacker mindset, always eager to engineer innovative solutions.
+            Hello, I am Baptiste, a tech professional with six years of diverse
+            development experience. I led as a lead developer for a SaaS cashier
+            system for three years, excelling both independently and in teams. I
+            embrace adaptability and a hacker mindset, always eager to engineer
+            innovative solutions.
           </p>
           <div className="mt-6 flex gap-6">
             <SocialLink

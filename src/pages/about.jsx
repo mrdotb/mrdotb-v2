@@ -75,9 +75,9 @@ export default function About() {
               </p>
               <p>
                 In addition to my Elixir expertise, I am well-versed in
-                JavaScript, Node.js, and the next.js framework. I stay up-to-date
-                with industry trends and news by frequenting Hacker News
-                regularly.
+                JavaScript, Node.js, and the next.js framework. I stay
+                up-to-date with industry trends and news by frequenting Hacker
+                News regularly.
               </p>
               <p>
                 As a part of the Elixir community, I regularly attend{' '}

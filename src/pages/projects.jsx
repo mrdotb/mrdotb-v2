@@ -6,13 +6,26 @@ import { SimpleLayout } from '@/components/SimpleLayout'
 import logoProbuildEx from '@/images/logos/probuild.png'
 import logoLeagueOfReplays from '@/images/logos/league-of-replays.svg'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
+import parchment from '@/images/logos/parchment.svg'
 
 const projects = [
+  {
+    name: 'DiscoLog',
+    description:
+      'Open source project. Use Discord as a logging service and error tracking solution for elixir applications.',
+    link: { href: 'https://github.com/mrdotb/disco-log', label: 'DiscoLog' },
+    logo: parchment,
+    alt: 'DiscoLog Logo',
+  },
+
   {
     name: 'League of replays',
     description:
       'Record and replay league of legends game using the spectator api.',
-    link: { href: 'https://leagueofreplays.co?ref=mrdotb.com', label: 'leagueofreplays.co' },
+    link: {
+      href: 'https://leagueofreplays.co?ref=mrdotb.com',
+      label: 'leagueofreplays.co',
+    },
     logo: logoLeagueOfReplays,
     alt: 'Logo of League of Replays',
   },
@@ -20,7 +33,10 @@ const projects = [
     name: 'ScarfSage',
     description:
       'Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
-    link: { href: 'https://scarfsage.com?ref=mrdotb.com', label: 'scarfsage.com' },
+    link: {
+      href: 'https://scarfsage.com?ref=mrdotb.com',
+      label: 'scarfsage.com',
+    },
     logo: logoScarfSage,
     alt: 'Logo of ScarfSage',
   },
@@ -39,10 +55,13 @@ const projects = [
     name: 'ProbuildEx',
     description:
       'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
-    link: { href: 'https://probuild.mrdotb.com?ref=mrdotb.com', label: 'probuild.mrdotb.com' },
+    link: {
+      href: 'https://probuild.mrdotb.com?ref=mrdotb.com',
+      label: 'probuild.mrdotb.com',
+    },
     logo: logoProbuildEx,
     alt: 'Logo of ProbuildEx',
-  }
+  },
 ]
 
 function LinkIcon(props) {
@@ -77,12 +96,17 @@ export default function Projects() {
           {projects.map((project) => (
             <Card as="li" key={project.name}>
               <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0">
-                <Image
-                  src={project.logo}
-                  alt={project.alt}
-                  className="h-8 w-8 rounded-full"
-                  unoptimized
-                />
+                {project.logo && (
+                  <Image
+                    src={project.logo}
+                    alt={project.alt}
+                    className="h-8 w-8 rounded-full"
+                    unoptimized
+                  />
+                )}
+                {project.svg && (
+                  <project.svg className="h-8 w-8 rounded-full" />
+                )}
               </div>
               <h2 className="mt-6 text-base font-semibold text-zinc-800 dark:text-zinc-100">
                 <Card.Link href={project.link.href}>{project.name}</Card.Link>
