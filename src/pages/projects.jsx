@@ -7,21 +7,29 @@ import logoProbuildEx from '@/images/logos/probuild.png'
 import logoLeagueOfReplays from '@/images/logos/league-of-replays.svg'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
 import parchment from '@/images/logos/parchment.svg'
+import liveReact from '@/images/logos/live-react.svg'
 
 const projects = [
   {
+    name: 'live_react',
+    description:
+      '✨ React inside Phoenix LiveView with seamless end-to-end reactivity',
+    link: { href: 'https://github.com/mrdotb/live_react', label: 'Live React' },
+    logo: liveReact,
+    alt: 'Live React Logo',
+  },
+  {
     name: 'DiscoLog',
     description:
-      'Open source project. Use Discord as a logging service and error tracking solution for elixir applications.',
+      '📜 Use Discord as a logging service and error tracking solution for elixir applications.',
     link: { href: 'https://github.com/mrdotb/disco-log', label: 'DiscoLog' },
     logo: parchment,
     alt: 'DiscoLog Logo',
   },
-
   {
     name: 'League of replays',
     description:
-      'Record and replay league of legends game using the spectator api.',
+      '👁️ Record and replay league of legends game using the spectator api.',
     link: {
       href: 'https://leagueofreplays.co?ref=mrdotb.com',
       label: 'leagueofreplays.co',
@@ -32,7 +40,7 @@ const projects = [
   {
     name: 'ScarfSage',
     description:
-      'Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
+      '🧣 Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
     link: {
       href: 'https://scarfsage.com?ref=mrdotb.com',
       label: 'scarfsage.com',
@@ -43,7 +51,7 @@ const projects = [
   {
     name: 'League of Replays channel',
     description:
-      'An automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
+      '🎬 An automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
     link: {
       href: 'https://www.youtube.com/@league0freplays',
       label: 'youtube.com/@league0freplays',
@@ -54,7 +62,7 @@ const projects = [
   {
     name: 'ProbuildEx',
     description:
-      'A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
+      '📑 A league of legend probuilds. Final result for my Elixir and Phoenix tutorial series.',
     link: {
       href: 'https://probuild.mrdotb.com?ref=mrdotb.com',
       label: 'probuild.mrdotb.com',
@@ -87,7 +95,7 @@ export default function Projects() {
       </Head>
       <SimpleLayout
         title="Things I’ve made trying to put my dent in the universe."
-        intro="I’ve worked on many personal projects over the years but these are the ones that I’m most proud of. I take pleasure in working with the gaming and vintage sectors."
+        intro="I’ve worked on many personal projects over the years but these are the ones that I’m most proud of. I take pleasure in working with open source, gaming and vintage sectors."
       >
         <ul
           role="list"
