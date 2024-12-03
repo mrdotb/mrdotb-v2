@@ -12,6 +12,15 @@ const nextConfig = {
   experimental: {
     scrollRestoration: true
   },
+  async redirects() {
+    return [
+      {
+        source: '/qr',
+        destination: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+        permanent: false
+      }
+    ]
+  }
 }
 
 const withMDX = nextMDX({
