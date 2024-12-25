@@ -8,8 +8,17 @@ import logoLeagueOfReplays from '@/images/logos/league-of-replays.svg'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
 import parchment from '@/images/logos/parchment.svg'
 import liveReact from '@/images/logos/live-react.svg'
+import dotb from '@/images/logos/dotb-logo.svg'
 
 const projects = [
+  {
+    name: 'Dotb',
+    description:
+      '💸 A chrome extension for Vinted to boost your sales and save time.',
+    link: { href: 'https://dotb.io?ref=mrdotb.com', label: 'dotb.io' },
+    logo: dotb,
+    alt: 'Dotb Logo',
+  },
   {
     name: 'live_react',
     description:
