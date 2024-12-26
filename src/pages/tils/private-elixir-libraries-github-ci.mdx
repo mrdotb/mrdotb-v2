@@ -1,0 +1,81 @@
+import { PostLayout } from '@/components/PostLayout'
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2024-12-26',
+  title: 'How to Use Private Elixir Libraries on GitHub CI',
+  tags: ['elixir', 'github', 'ci', 'docker', 'mix'],
+  description:
+    'A detailed guide on how to configure GitHub Actions to access private Elixir libraries hosted on GitHub, including setting up personal access tokens, updating mix.exs, and using Docker for builds.',
+}
+
+When working with private Elixir libraries hosted on GitHub, integrating them into your CI pipeline requires a few specific steps. Here's a guide to ensure everything runs smoothly.
+
+### Specify the Private Repository in `mix.exs`
+
+In your `mix.exs` file, declare the dependency using the GitHub repository information. Using a specific commit hash is recommended to avoid potential issues with branch names due to CI caching.
+
+```elixir
+defp deps do
+  [
+    {:private_repo, github: "username/private_repo", ref: "commit"},
+    # Using a commit hash ensures consistency as branch names might change.
+    ...
+  ]
+end
+```
+
+### Generate a GitHub Personal Access Token (PAT)
+1. Visit the [GitHub PAT settings](https://github.com/settings/personal-access-tokens/new).
+2. Set the **Expiration** field to `No expiration` (for long-term CI use; remember to rotate tokens periodically for security).
+3. Under **Repository Access**, select the private repository you want to grant access to.
+4. In **Permissions**, set the following to `Read-only`:
+   - Commit statuses
+   - Contents
+   - Pull requests
+   - Metadata
+5. Generate the token and copy it.
+6. Add this token as a secret in your CI/CD pipeline, e.g., as `PAT`.
+
+### Add the GitHub Token to Your CI Job
+In the CI configuration, add the `GITHUB_TOKEN` as a build argument. For example, in a GitHub Actions workflow:
+
+```yaml
+- name: Build and Push Docker image to GHCR
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: true
+    tags: ${{ steps.meta.outputs.tags }}
+    labels: ${{ steps.meta.outputs.labels }}
+    build-args: |
+      MIX_ENV=small
+      BUILD_METADATA=${{ steps.meta.outputs.json }}
+      ERL_FLAGS=+JPperf true
+      GITHUB_TOKEN=${{ secrets.PAT }}
+```
+
+### Update the Dockerfile
+To allow `git` to access private repositories, configure the GitHub token in the Dockerfile:
+
+```Dockerfile
+# We need this for git to access private repos
+ARG GITHUB_TOKEN
+
+...
+
+# Configure git to use the GITHUB_TOKEN in the URL
+RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/" \
+    && mix deps.get --only $MIX_ENV
+```
+
+This configuration ensures that your Docker build process can pull private repositories using the provided `GITHUB_TOKEN`.
+
+### Summary
+By following these steps:
+1. Define your private repository in `mix.exs`.
+2. Generate and securely store a GitHub Personal Access Token.
+3. Configure your CI/CD pipeline to use the token as a build argument.
+4. Update your Dockerfile to configure `git` for private repo access.
+
+Your CI pipeline will now be able to fetch private dependencies, streamlining the build process for Elixir projects.
