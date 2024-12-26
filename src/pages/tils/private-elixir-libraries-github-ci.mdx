@@ -9,6 +9,8 @@ export const meta = {
     'A detailed guide on how to configure GitHub Actions to access private Elixir libraries hosted on GitHub, including setting up personal access tokens, updating mix.exs, and using Docker for builds.',
 }
 
+export default (props) => <PostLayout meta={meta} {...props} />
+
 When working with private Elixir libraries hosted on GitHub, integrating them into your CI pipeline requires a few specific steps. Here's a guide to ensure everything runs smoothly.
 
 ### Specify the Private Repository in `mix.exs`
