@@ -18,6 +18,16 @@ const nextConfig = {
         source: '/qr',
         destination: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
         permanent: false
+      },
+      {
+        source: '/vde',
+        destination: 'https://vinteddressing.mrdotb.com/',
+        permanent: false
+      },
+      {
+        source: '/vre',
+        destination: 'https://vintedreviews.mrdotb.com/',
+        permanent: false
       }
     ]
   }
