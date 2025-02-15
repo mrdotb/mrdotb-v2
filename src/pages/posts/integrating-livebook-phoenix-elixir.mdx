@@ -1,0 +1,217 @@
+import { PostLayout } from '@/components/PostLayout'
+import { YouTube } from '@/components/YouTube'
+import { SingleLightbox } from '@/components/SingleLightbox'
+import Image from 'next/image'
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2025-02-15',
+  title: 'Integrating Livebook into My Phoenix/Elixir Projects',
+  tags: ['livebook', 'mise', 'elixir', 'phoenix'],
+  description:
+    'Learn how to integrate Livebook seamlessly into your Phoenix/Elixir projects using Mise for environment management. This guide covers connecting Livebook to development and production nodes on Fly.io and Kubernetes, making it a powerful tool for experimentation and admin tasks.',
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+
+Lately, I've been using [Livebook](https://livebook.dev/) extensively in my Phoenix/Elixir projects, and I wanted to share how I’ve integrated it into my workflow.
+
+One recent change I made was switching from [**asdf**](https://asdf-vm.com/) to [**mise**](https://mise.jdx.dev/). While this isn't mandatory, I’ve really come to enjoy **mise** and find its task system quite convenient.
+
+## Project Setup with Mise
+At the root of my project, I have a `mise.toml` file specifying the versions of Erlang and Elixir for this project:
+
+```toml
+[tools]
+erlang = '27.2.1'
+elixir = '1.18.2-otp-27'
+```
+
+I also have a `mise-tasks` folder containing various scripts that I can invoke with:
+
+```bash
+mise run script_name [arguments]
+```
+
+## Connecting to a Production IEx Session
+Depending on the deployment setup, I use different scripts to open an IEx session on the production server.
+I call this script `fiex` and it live in `mise-tasks` folder
+
+### For [Fly.io](https://fly.io/)
+```bash
+#!/usr/bin/env bash
+set -e
+
+#MISE description="Run iex on production pod"
+
+fly ssh console --pty -C "/app/bin/app remote"
+```
+
+### **For Kubernetes (K8s)**
+```bash
+#!/usr/bin/env bash
+set -e
+
+#MISE description="Run iex on production pod"
+
+if [ -z $KUBECONFIG ]; then
+  echo "KUBECONFIG is not set"
+  exit 1
+fi
+
+pod_name=$(kubectl get pods -l app.kubernetes.io/name=phoenix-app,app=app -o jsonpath='{range .items[?(@.status.phase=="Running")]}{.metadata.name}{end}' )
+
+kubectl exec -it $pod_name -- sh -c "/app/bin/app remote"
+```
+
+## Using Livebook in Development and Production
+
+I find [Livebook](https://livebook.dev/) incredibly useful—not just for experimenting with code, but also for executing administrative tasks on production without the need to build a separate admin dashboard.
+
+In my project, I have a `livebooks` folder where I store all my Livebook notebooks. Here’s the [base template](https://gist.github.com/mrdotb/d08c9cb6bb6d8f151ab657f07ec2621b) I use.
+
+For development, I run the node with:
+
+```bash
+iex --name app@127.0.0.1 --cookie cookie -S mix phx.server
+```
+
+For production, the node runs with:
+
+```bash
+RELEASE_DISTRIBUTION="name" and a secure cookie.
+```
+
+## Connecting Livebook to Dev/Prod
+I have scripts that allow me to quickly attach Livebook to either my dev or prod environment.
+The script live in `mise-tasks` folder and I call it `livebook-connect`
+
+### For Fly.io
+```bash
+#!/usr/bin/env bash
+set -e
+
+#MISE description="Run livebook on dev / prod"
+
+# Usage:
+#
+# Development:  ./connect-live.sh
+# Production:   ./connect-live.sh prod
+
+fly_app="app"
+fly_cookie=$RELEASE_COOKIE
+dev_app="app"
+dev_cookie="cookie"
+
+export LIVEBOOK_HOME="$PWD/livebooks"
+
+case "$1" in
+  "prod")
+    echo "[PROD] Starting Livebook..."
+    fly_ip=$(fly ips private --app $fly_app | cut -f 3 | sed -n 2p)
+    fly_node="$fly_app@$fly_ip"
+    export LIVEBOOK_DEFAULT_RUNTIME="attached:$fly_node:$fly_cookie"
+    export LIVEBOOK_NODE="livebook@127.0.0.1"
+    export LIVEBOOK_DISTRIBUTION="name"
+    export ERL_AFLAGS="-proto_dist inet6_tcp"
+    ;;
+  *)
+    echo "[DEV] Starting Livebook..."
+    dev_node="$dev_app@127.0.0.1"
+    export LIVEBOOK_DEFAULT_RUNTIME="attached:$dev_node:$dev_cookie"
+    ;;
+esac
+
+livebook server
+```
+
+#### For Kubernetes (K8s)
+```bash
+#!/usr/bin/env bash
+set -xe
+
+#MISE description="Run livebook on dev / prod"
+
+function show_help {
+  echo "Usage: livebook-connect <env>"
+  echo "Development:  ./livebook-connect dev"
+  echo "Production:   ./livebook-connect prod"
+}
+
+if [[ "$1" == "" ]]; then
+  show_help
+  exit 1
+fi
+
+app="app"
+cookie=$RELEASE_COOKIE
+dev_app="app"
+dev_cookie="cookie"
+epmd_port=4369
+
+export LIVEBOOK_HOME="$(pwd)/livebooks"
+
+case "$1" in
+  "prod")
+    if [ -z $KUBECONFIG ]; then
+      echo "KUBECONFIG is not set"
+      exit 1
+    fi
+
+    if [ -z $RELEASE_COOKIE ]; then
+      echo "RELEASE_COOKIE is not set"
+      exit 1
+    fi
+
+    echo "[PROD] Starting Livebook..."
+    pod_name=$(kubectl get pods -l app.kubernetes.io/name=phoenix-app,app=app -o jsonpath='{range .items[?(@.status.phase=="Running")]}{.metadata.name}{end}' )
+    # Kill local epmd
+    killall epmd || true
+    # Forward remote epmd
+    kubectl port-forward $pod_name $epmd_port &
+    epmd_tunnel_pid=$!
+    sleep 3
+
+    epmd=$(epmd -names)
+    # Ports
+    port=$(echo "$epmd" | tail -n +2 | cut -d' ' -f 5)
+    # Finding the node name
+    name=$(echo "$epmd" | tail -n +2 | cut -d' ' -f 2)
+
+    # Forward remote node
+    kubectl port-forward $pod_name $port &
+    node_tunnel_pid=$!
+    sleep 3
+
+    pod_ip=$(kubectl get pod $pod_name -o jsonpath='{.status.podIP}')
+    host=$(echo $pod_ip | sed 's/\./-/g').default.pod.cluster.local
+
+    node="app@$host"
+
+    export ERL_INETRC=/tmp/erl_inetrc
+    echo "{host, {127,0,0,1}, [\"$host\", \"$node\"]}." >$ERL_INETRC
+    echo "{edns,0}." >>$ERL_INETRC
+    echo "{lookup, [file, dns]}." >>$ERL_INETRC
+
+    export LIVEBOOK_DEFAULT_RUNTIME="attached:$node:$cookie"
+    export LIVEBOOK_NODE="livebook@127.0.0.1"
+    export LIVEBOOK_DISTRIBUTION="name"
+    ;;
+  "dev")
+    echo "[DEV] Starting Livebook..."
+    dev_node="$dev_app@127.0.0.1"
+    export LIVEBOOK_DEFAULT_RUNTIME="attached:$dev_node:$dev_cookie"
+    ;;
+esac
+
+livebook server && echo "cleanup"
+```
+
+[Livebook](https://livebook.dev/) has been a big improvement for my workflow, allowing me to:
+
+- Experiment with Elixir in a structured and reproducible manner.
+- Perform admin tasks on production without needing a dedicated admin panel.
+- Quickly attach to dev or prod nodes, keeping everything organized.
+
+If you’re working with Phoenix/Elixir, I highly recommend integrating Livebook into your project. 🚀
