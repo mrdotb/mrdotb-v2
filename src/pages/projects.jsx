@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Card } from '@/components/Card'
 import { SimpleLayout } from '@/components/SimpleLayout'
 import logoProbuildEx from '@/images/logos/probuild.png'
+import logoGithub from '@/images/logos/github.svg'
 import logoLeagueOfReplays from '@/images/logos/league-of-replays.svg'
 import logoScarfSage from '@/images/logos/scarfsage.svg'
 import parchment from '@/images/logos/parchment.svg'
@@ -36,17 +37,6 @@ const projects = [
     alt: 'DiscoLog Logo',
   },
   {
-    name: 'League of replays',
-    description:
-      '👁️ Record and replay league of legends game using the spectator api.',
-    link: {
-      href: 'https://leagueofreplays.co?ref=mrdotb.com',
-      label: 'leagueofreplays.co',
-    },
-    logo: logoLeagueOfReplays,
-    alt: 'Logo of League of Replays',
-  },
-  {
     name: 'ScarfSage',
     description:
       '🧣 Scarf Sage is an extensive Hermès scarf database featuring 1500+ designs, 3500+ variations.',
@@ -58,6 +48,17 @@ const projects = [
     alt: 'Logo of ScarfSage',
   },
   {
+    name: 'League of replays',
+    description:
+      '👁️ Record and replay league of legends game using the spectator api.',
+    link: {
+      href: 'https://leagueofreplays.co?ref=mrdotb.com',
+      label: 'leagueofreplays.co',
+    },
+    logo: logoLeagueOfReplays,
+    alt: 'Logo of League of Replays',
+  },
+  {
     name: 'League of Replays channel',
     description:
       '🎬 An automated League of Legends YouTube channel, created using Elixir and FFmpeg. ',
@@ -67,6 +68,17 @@ const projects = [
     },
     logo: logoLeagueOfReplays,
     alt: 'Logo of League of Replays',
+  },
+  {
+    name: 'resvg_nif',
+    description:
+      '✏️ Elixir NIF bindings for the Resvg library.',
+    link: {
+      href: 'https://github.com/mrdotb/resvg_nif',
+      label: 'resvg_nif',
+    },
+    logo: logoGithub,
+    alt: 'Logo of ProbuildEx',
   },
   {
     name: 'ProbuildEx',
