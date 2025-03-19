@@ -1,0 +1,51 @@
+import { PostLayout } from '@/components/PostLayout'
+
+export const meta = {
+  author: 'mrdotb',
+  date: '2025-03-19',
+  title: 'Stream a downloaded file with Phoenix and Req',
+  tags: ['elixir', 'phoenix', 'req', 'plug'],
+  description:
+    'Workaround for ISPs blocking Tigris S3 storage: I used Phoenix and Req to proxy and stream files in chunks, ensuring smooth delivery. This post explains how to implement it with send_chunked/2 and Req.get!/2.',
+}
+
+export default (props) => <PostLayout meta={meta} {...props} />
+
+I had to proxy files from an S3 bucket hosted on Tigris because some ISPs are blocking the domain `fly.storage.tigris.dev`, as it was previously used to distribute malware.
+
+### The code
+
+```elixir
+def show(conn, %{
+      "id" => document_id
+    }) do
+  case Documents.get_document_by(id: document_id) do
+    document when is_map(document) ->
+      s3_url = Documents.get_s3_url(document)
+
+      conn =
+        conn
+        # I'm serving pdf only but adapt for your use case
+        |> put_resp_content_type("application/pdf")
+        # Send the response in chunks
+        |> send_chunked(200)
+
+      # Perform the request to the S3 url
+      # We use `into: fn ... end` to capture the streamed data
+      # immediately pass it to the client with `chunk/2`
+      Req.get!(s3_url,
+        into: fn {:data, data}, {req, resp} ->
+          chunk(conn, data)
+          {:cont, {req, resp}}
+        end
+      )
+
+      conn
+
+    nil ->
+      conn
+      |> put_status(404)
+      |> render("404.html")
+  end
+end
+```
