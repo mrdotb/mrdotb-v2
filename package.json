@@ -10,6 +10,9 @@
     "format": "prettier --write src/"
   },
   "browserslist": "defaults, not ie <= 11",
+  "engines": {
+    "node": "24.x"
+  },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
     "@mdx-js/loader": "^2.1.5",
