@@ -35,11 +35,29 @@ const modeScript = `
   }
 `
 
+const trackingScript = `
+  try {
+    if (!sessionStorage.getItem('formol')) {
+      var s = document.createElement('script')
+      s.src = 'https://f.mrdotb.com/collector.js'
+      s.async = true
+      s.onload = function () {
+        Formol.load({ endpoint: 'https://f.mrdotb.com/api' })
+          .then(function (agent) { return agent.get() })
+          .then(function (r) { sessionStorage.setItem('formol', r.requestId) })
+          .catch(function () {})
+      }
+      document.head.appendChild(s)
+    }
+  } catch (e) {}
+`
+
 export default function Document() {
   return (
     <Html className="h-full antialiased" lang="en">
       <Head>
         <script dangerouslySetInnerHTML={{ __html: modeScript }} />
+        <script dangerouslySetInnerHTML={{ __html: trackingScript }} />
         <link
           rel="alternate"
           type="application/rss+xml"
